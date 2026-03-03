@@ -20,3 +20,9 @@ h1:hover {
     color: white;
     cursor: pointer;
 }
+
+.icons-header{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}

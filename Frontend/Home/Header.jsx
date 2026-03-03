@@ -12,18 +12,19 @@ function Header() {
                 <Link to="/">
                     <h1 className="header-title title-font">Mega Burguer</h1>
                 </Link>
+                <div className="icons-header">
+                    <Link to="/profile">
+                        <Icons.User size={30} className="icons" />
+                    </Link>
 
-                <Link to="/profile">
-                    <Icons.User size={30} className="icons" />
-                </Link>
+                    <Link to="/cart">
+                        <Icons.Cart size={30} className="icons" />
+                    </Link>
 
-                <Link to="/cart">
-                    <Icons.Cart size={30} className="icons" />
-                </Link>
-
-                <Link to="/menu">
-                    <Icons.Menu size={30} className="icons" />
-                </Link>
+                    <Link to="/menu">
+                        <Icons.Menu size={30} className="icons" />
+                    </Link>
+                </div>
             </nav>
         </header>
     );
