@@ -1,0 +1,57 @@
+:root {
+    /* Color Café */
+    --primary: rgb(80, 35, 20);
+    /* Color Rojo */
+    --secondary: rgb(214, 35, 0);
+    /* Color Amarillo */
+    --tertiary: rgb(255, 135, 50);
+}
+
+/* Fondo */
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-secondary {
+    background-color: var(--secondary);
+}
+
+.bg-tertiary {
+    background-color: var(--tertiary);
+}
+
+/* Texto */
+.text-primary {
+    color: var(--primary);
+}
+
+.text-secondary {
+    color: var(--secondary);
+}
+
+.text-tertiary {
+    color: var(--tertiary);
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: rgb(60, 25, 15);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+}
+
+.btn-tertiary {
+    background-color: var(--tertiary);
+    color: white;
+    border: none;
+}
