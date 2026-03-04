@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Icons } from "@shared/icons.js";
 import "@styles/home.css";
-import e from "cors";
+
+import 'bootstrap-icons/font/bootstrap-icons.css'
+
 
 
 
@@ -35,9 +37,11 @@ function Register() {
 
 
   return (
-    <div className="register-container ">
-        <h1>Registrarse</h1>
+    <div className="register-container  min-vh-100  d-flex flex-column justify-content-center align-items-center">
+        <h1 style={{color:'rgb(255, 135, 50)'}}>Registrarse</h1>
         <form action="" className="formulario">
+
+            
             <div className="input-containers">
                 <label htmlFor="nombre">Nombre</label>
                 <input 
