@@ -1,0 +1,99 @@
+:root {
+    /* Colores */
+    --primary: rgb(80, 35, 20);
+    --secondary: rgb(214, 35, 0);
+    --tertiary: rgb(255, 135, 50);
+
+    /* Fuentes */
+    --font-title: 'Luckiest Guy', cursive;
+    --font-slogan: 'Rubik Doodle Shadow', system-ui;
+    --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Quitar estilo por defecto a los links del navbar */
+.nav-bar a {
+    text-decoration: none;   /* Quita subrayado */
+    color: black;            /* Fuerza color negro */
+}
+
+/* Evitar color morado después de click */
+.nav-bar a:visited {
+    color: black;
+}
+
+/* TITULOS */
+.title-font {
+    font-family: var(--font-title);
+    letter-spacing: 2px;
+}
+
+/* SLOGAN */
+.slogan-font {
+    font-family: var(--font-slogan);
+}
+
+/* Texto normal */
+.body-font {
+    font-family: var(--font-body);
+}
+
+/* Fondo */
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-secondary {
+    background-color: var(--secondary);
+}
+
+.bg-tertiary {
+    background-color: var(--tertiary);
+}
+
+/* Texto */
+.text-primary {
+    color: var(--primary);
+}
+
+.text-secondary {
+    color: var(--secondary);
+}
+
+.text-tertiary {
+    color: var(--tertiary);
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: rgb(60, 25, 15);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+}
+
+.btn-tertiary {
+    background-color: var(--tertiary);
+    color: white;
+    border: none;
+}

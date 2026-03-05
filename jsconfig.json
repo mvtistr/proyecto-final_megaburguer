@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@styles/*": ["./src/assets/styles/*"],
+      "@cart/*": ["./Frontend/Cart/*"],
+      "@gallery/*": ["./Frontend/Gallery/*"],
+      "@home/*": ["./Frontend/Home/*"],
+      "@login/*": ["./Frontend/Login/*"],
+      "@register/*": ["./Frontend/Register/*"],
+      "@users/*": ["./Frontend/Users/*"],
+      "@img/*": ["./src/assets/img/*"],
+      "@shared/*": ["./src/shared/*"]
+    }
+  }
+}
