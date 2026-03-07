@@ -1,4 +1,3 @@
-import Header from "../Home/Header.jsx";
 import { useState, useEffect } from "react";
 import { Icons } from "@shared/icons.js";
 

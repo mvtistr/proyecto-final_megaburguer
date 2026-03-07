@@ -1,16 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 
-import Home from "@home/Home.jsx";
-import Gallery from "@gallery/Gallery.jsx";
-import Product from "@gallery/Product.jsx";
-import Profile from "@users/Profile.jsx";
-import Login from "@login/Login.jsx";
-import Register from "@register/Register.jsx";
-import Cart from "@cart/Cart.jsx";
+import AdminView from "@pages/AdminView";
+import Cart from "@pages/Cart.jsx";
+import Home from "@pages/Home.jsx";
+import Gallery from "@pages/Gallery.jsx";
+import Login from "@pages/Login.jsx";
+import Product from "@pages/Product.jsx";
+import Profile from "@pages/Profile.jsx";
+import Register from "@pages/Register.jsx";
 
-import Header from "@home/Header.jsx";
-import Footer from "@home/Footer.jsx";
-import AdminView from "../Frontend/admin/AdminView"
+import Header from "@components/Header.jsx";
+import Footer from "@components/Footer.jsx";
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route path="/profile" element={<Profile />} />
-        <Route path="/menu" element={<Menu />} />
+        <Route path="/menu" element={<Gallery />} />
         <Route path="/register" element ={<Register />}/>
         <Route path= "/login" element = {<Login />} /> 
         <Route path= "/admin" element = {<AdminView />} /> 

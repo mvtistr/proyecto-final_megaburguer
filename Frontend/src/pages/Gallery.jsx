@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { BsArrowLeftCircleFill, BsArrowRightCircleFill } from "react-icons/bs";
-import { fetchProducts } from "@services/productService";
-import "@styles/menu.css";
 import { Link } from "react-router-dom";
+
+import { Icons } from "@shared/icons.js";
+
+import { fetchProducts } from "@services/productService";
+
+import "@styles/menu.css";
 
 function Menu() {
   const [products, setProducts] = useState([]);
@@ -32,7 +35,7 @@ function Menu() {
       </h2>
       <div className="gallery-wrapper">
         <button className="gallery-arrow" onClick={prev}>
-          <BsArrowLeftCircleFill size={35} />
+          <Icons.ArrowLeft size={35} />
         </button>
         <div className="gallery-grid">
           {visible.map((product) => (
@@ -54,7 +57,7 @@ function Menu() {
           ))}
         </div>
         <button className="gallery-arrow" onClick={next}>
-          <BsArrowRightCircleFill size={35} />
+          <Icons.ArrowRight size={35} />
         </button>
       </div>
     </div>

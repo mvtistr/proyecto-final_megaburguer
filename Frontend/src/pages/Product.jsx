@@ -1,8 +1,13 @@
-import { useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import { CartContext } from "@context/CartContext";
+
 import products from "@data/products";
+
 import "@styles/product.css";
+
+import { Icons } from "@shared/icons.js";
 
 function Product() {
   const { id } = useParams();
@@ -27,7 +32,7 @@ function Product() {
           alt={product.name}
           className="main-image"
         />
-        <button className="back-btn" onClick={() => navigate(-1)}>Atrás</button>
+        {/* <button className="back-btn" onClick={() => navigate(-1)}>Atrás</button> */}
       </div>
 
       {/* Información */}
@@ -47,7 +52,21 @@ function Product() {
             ))}
           </ul>
         </div>
-        <button className="add-cart-btn" onClick={handleAddToCart}>Agregar al pedido</button>
+
+        <div className="product-buttons">
+          
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            <Icons.Back size={18} style={{ marginRight: "10px" }} />
+            Atrás
+          </button>
+
+          <button className="add-cart-btn" onClick={handleAddToCart}>
+            <Icons.Cart size={18} style={{ marginRight: "10px" }} />
+            Agregar al pedido
+          </button>
+
+        </div>
+
       </div>
     </div>
   );

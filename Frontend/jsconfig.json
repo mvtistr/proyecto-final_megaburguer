@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@assets": ["./src/assets"],
+      "@img": ["./src/assets/img"],
+      "@styles": ["./src/assets/styles"],
+      "@components": ["./src/components"],
+      "@context": ["./src/context"],
+      "@data": ["./src/data"],
+      "@pages": ["./src/pages"],
+      "@services": ["./src/services"],
+      "@shared": ["./src/shared"]
+    }
+  }
+}
