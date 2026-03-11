@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@db": ["./db"],
+      "@models": ["./src/models"],
+      "@routes": ["./src/routes"],
+      "@controllers": ["./src/controllers"]
+    }
+  }
+}

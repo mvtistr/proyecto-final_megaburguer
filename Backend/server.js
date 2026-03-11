@@ -2,7 +2,6 @@ const express = require("express")
 
 require('dotenv').config()
 const cors = require("cors")
-const jwt = require("jsonwebtoken")
 const path = require("path"); 
 
 
