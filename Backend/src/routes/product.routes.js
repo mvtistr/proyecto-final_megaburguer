@@ -6,13 +6,18 @@ const {
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+     getProductsPaginacion,
+
 } = require('@controllers/product.controller.js');
 
-router.get('/', getProducts);
-router.get('/:id', getProductById);
-router.post('/', createProduct);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
+router.get('/products', getProductsPaginacion);
+
+router.get('/products/:id', getProductById);
+router.post('/products', createProduct);
+router.put('/products/:id', updateProduct);
+router.delete('/products/:id', deleteProduct);
+
+
 
 module.exports = router;
