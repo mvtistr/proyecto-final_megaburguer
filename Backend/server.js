@@ -1,31 +1,33 @@
-const express = require("express")
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
 
-require('dotenv').config()
-const cors = require("cors")
-const path = require("path"); 
+/* rutas */
+const authRoutes = require('./src/routes/auth.routes.js');
+const productRoutes = require('./src/routes/product.routes.js');
+const orderRoutes = require('./src/routes/order.routes.js');
 
+const app = express();
 
+/* middleware */
+app.use(cors());
+app.use(express.json());
 
+/* api routes */
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
-const app = express()
+/* frontend */
+app.use(
+    express.static(
+        path.join(__dirname, '..', "frontend", "dist", "index.html")
+    )
+);
 
-app.use(express.json())
-app.use(cors())
+/* server */
+const PORT = process.env.PORT || 3000;
 
-
-
-const puerto = 2000
-
-app.use(express.static(path.join(__dirname,  "..", "Frontend", "dist")))
-
-
-app.get('/', (req,res)=>{
-    res.sendFile(path.join(__dirname,'..', 'Frontend', 'index.html'))
-})
-
-app.listen(puerto, ()=>{
-    
-        console.log(`Conectados en el servidor en ${puerto}`)
-        
- 
-})
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
