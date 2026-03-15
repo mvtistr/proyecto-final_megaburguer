@@ -2,7 +2,10 @@ const pool = require('@db/db.js');
 
 const getOrders = async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM orders');
+        const { page = 1} = req.query;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+        const result = await pool.query('SELECT * FROM orders order by  ASC limit $1 offset $2', [limit,offset]);
         res.json(result.rows);
     } catch (err) {
         console.error(err);
@@ -70,6 +73,9 @@ const deleteOrder = async (req, res) => {
         res.status(500).json({ error: 'Error deleting order' });
     }
 };
+
+
+
 
 module.exports = {
     getOrders,

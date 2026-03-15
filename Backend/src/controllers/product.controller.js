@@ -1,5 +1,11 @@
 const pool = require('@db/db.js');
 
+
+const { getProductsPaginacion} = require('../modules/product.modul.js')
+
+
+
+
 const getProducts = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM products');
@@ -71,10 +77,44 @@ const deleteProduct = async (req, res) => {
     }
 };
 
+
+
+// SECCION DE PAGINADO Y FILTRO DE PRODUCTOS
+
+
+
+
+const getProductsPaginacionController = async(req,res) =>{
+    try {
+        const {order_by  = 'id_ASC' , limit= 6, page=1} = req.query
+        const products = await getProductsPaginacion(
+            order_by,
+            number(limit),
+            number(page)
+        )
+
+        res.status(200).json({products})
+
+        
+    } catch (error) {
+        res.status(500).json({error:'error con la peticion'})
+        
+    }
+
+}
+
+
+
+
+
+
+
 module.exports = {
     getProducts,
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductsPaginacionController
+   
 };
