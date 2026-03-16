@@ -1,26 +1,42 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { CartContext } from "@context/CartContext";
-
-import products from "@data/products";
+import { getProductById } from "@services/product.service";
 
 import "@styles/product.css";
-
 import { Icons } from "@shared/icons.js";
 
 function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
-  const product = products.find(p => p.id === id);
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        const data = await getProductById(id);
+        setProduct(data);
+      } catch (error) {
+        console.error("Error cargando el producto:", error);
+      }
+    };
+
+    loadProduct();
+  }, [id]);
   if (!product) {
-    return <h2>Producto no encontrado</h2>;
+    return <h2>Cargando producto...</h2>;
   }
 
   const handleAddToCart = () => {
     addToCart(product);
   };
+
+  const ingredientsList = 
+    typeof product.ingredients === "string"
+      ? product.ingredients.split(",")
+      : product.ingredients;
 
   return (
     <div className="product-container">
@@ -28,11 +44,10 @@ function Product() {
       {/* Imagen */}
       <div className="product-image-section">
         <img
-          src={product.image}
+          src={product.image_url}
           alt={product.name}
           className="main-image"
         />
-        {/* <button className="back-btn" onClick={() => navigate(-1)}>Atrás</button> */}
       </div>
 
       {/* Información */}
@@ -47,7 +62,7 @@ function Product() {
           <p>{product.description}</p>
           <h4>Ingredientes</h4>
           <ul>
-            {product.ingredients.map((item, index) => (
+            {ingredientsList.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>
