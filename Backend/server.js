@@ -11,5 +11,3 @@ app.use(json());
 app.use("/api", routes);
 
 app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
-
-export default app;
