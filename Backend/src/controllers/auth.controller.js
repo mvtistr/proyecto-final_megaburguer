@@ -5,7 +5,7 @@ const {
     registerModule,
     deleteUserModule,
     updateUserModule
-} = require('../modules/auth.model.js');
+} = require('../models/auth.model.js');
 
 // LOGIN
 const loginController = async(req, res) =>{
