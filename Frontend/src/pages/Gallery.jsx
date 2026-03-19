@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Icons } from "@shared/icons.js";
 
-import { fetchProducts } from "@services/productService";
+import { getProducts } from "@services/productService";
 
 import "@styles/menu.css";
 
@@ -13,21 +13,35 @@ function Menu() {
   const visibleProducts = 4;
 
   useEffect(() => {
-    fetchProducts().then((data) => {
-      setProducts(data);
-    });
+    const loadProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error cargando los productos:", error);
+      }
+    };
+    loadProducts();
   }, []);
+
   const next = () => {
     if (startIndex + visibleProducts < products.length) {
       setStartIndex(startIndex + visibleProducts);
     }
   };
+
   const prev = () => {
     if (startIndex > 0) {
       setStartIndex(startIndex - visibleProducts);
     }
   };
+
   const visible = products.slice(startIndex, startIndex + visibleProducts);
+
+  if (!products.length) {
+    return <p className="loading">Cargando menú...</p>;
+  }
+
   return (
     <div className="gallery-container">
       <h2 className="title-font gallery-title">
@@ -45,7 +59,7 @@ function Menu() {
               className="product-card"
             >
               <img
-                src={product.image}
+                src={product.image_url}
                 alt={product.name}
                 className="product-img"
               />

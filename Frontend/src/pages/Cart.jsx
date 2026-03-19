@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { CartContext } from "@context/CartContext";
 
+import { createOrder } from "@services/order.service";
+
 import "@styles/cart.css";
 
 function Cart() {
@@ -21,6 +23,22 @@ function Cart() {
     (acc, product) => acc + product.price * product.quantity,
     0
   );
+
+  const handleCheckout = async () => {
+    try {
+      const order = {
+        user_id: 1, // Reemplazar con el ID del usuario autenticado
+        total_price: total,
+        status: "pending"
+      };
+      await createOrder(order);
+      clearCart();
+      navigate("/");
+    } catch (error) {
+      console.error("Error al crear el pedido:", error);
+    }
+  };
+
 
   if (cart.length === 0) {
     return (
@@ -44,7 +62,7 @@ function Cart() {
           <div key={product.id} className="cart-item">
 
             <img
-              src={product.image}
+              src={product.image_url}
               alt={product.name}
               className="cart-item-img"
             />
@@ -80,6 +98,10 @@ function Cart() {
         </h3>
 
         <div className="cart-buttons">
+
+        <button className="cart-btn checkout" onClick={handleCheckout}>
+          Confirmar pedido
+        </button>
 
           <button
             className="cart-btn"
