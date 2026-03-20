@@ -21,16 +21,11 @@ function Login() {
             return;
         }
         try {
-            const response = await loginUser({
+            await loginUser({
                 email,
                 password
             });
-
-            /* guardar token */
-            localStorage.setItem("token", response.token);
-            localStorage.setItem("user", JSON.stringify(response.user));
             alert("👋 Bienvenido " + response.user.name + "!🍔");
-
             if (data.user.role === "admin") {
                 navigate("/admin");
             } else {
@@ -44,12 +39,10 @@ function Login() {
 
     return (
         <div className=" login-container min-vh-100  d-flex flex-column justify-content-center align-items-center">
-
             <BsPersonFill size={60} className="" style={{ color: 'rgb(255, 135, 50)' }} />
             <h1 className="mt-5" style={{ color: 'rgb(255, 135, 50)' }} >Inicio de sesion</h1>
             <form onSubmit={entrar} className="formulario ">
                 <div className="m-3 form-floating">
-
                     <input
                         className="form-control"
                         type="email"

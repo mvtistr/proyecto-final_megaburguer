@@ -1,73 +1,98 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
+const {
+    loginModule,
+    registerModule,
+    deleteUserModule,
+    updateUserModule
+} = require('../models/auth.model.js');
 
-
-
-const {loginModule , deleteUserModule, registerModule , actualizarUserModule} = require('../modules/auth.model.js')
-
-
-
-
+// LOGIN
 const loginController = async(req, res) =>{
     try{
-        const {email, password}= req.body
-        const token = await loginModule(email,password);
-        console.log("Token recibido", token)
-        
-        
-        res.status(200).json({token})
-
-    }catch(err){
+        const {email, password}= req.body;
+        const user = await loginModule(email, password);
+        if(!user){
+            return res.status(401).json({error:"Credenciales invalidas"})
+        }
+        const token = jwt.sign(
+            user,
+            process.env.JWT_SECRET,
+            {expiresIn: '2h'}
+        );
+        res.status(200).json({
+            message: "Login exitoso",
+            token,
+            user
+        });
+    }catch(error){
         res.status(500).json({error:error.message})
-
     }
-}
+};
 
-
+// REGISTER
 const registerController = async (req,res)=>{
     try {
-        const {name,email, password, direction, role} = req.body
-        await registerModule(name, email, password, direction, role)
-        res.send("Te has  registrado")
-
-        
-    } catch (err) {
-        res.status(500).json({error:error.messae})
-        
+        const {name,email, password, direction} = req.body;
+        if(!name || !email || !password || !direction){
+            return res.status(400).json({error:"Todos los campos son requeridos"});
+        }
+        const newUser = await registerModule(
+            name,
+            email,
+            password,
+            direction,
+        );
+        res.status(201).json({
+            message: "Usuario registrado exitosamente",
+            user: newUser
+        });
+    } catch (error) {
+        res.status(500).json({error:error.message})
     }
-}
+};
 
-
-const actualizarController = async (req,res) =>{
-    const {id} = req.params
-    const {name, password, direction} = req.body
+// UPDATE
+const updateUserController = async (req,res) =>{
     try {
-         await actualizarUserModule(id, name, password, direction)
-        res.send("Actualizado")
-
-      
-        
-        
-    } catch (err) {
-        res.status(500).json({eror:error.message})
-        
+        const {id} = req.params;
+        const {name, password, direction} = req.body;
+        const updatedUser = await updateUserModule(
+            id,
+            name,
+            password,
+            direction
+        );
+        if(!updatedUser){
+            return res.status(404).json({error:"Usuario no encontrado"});
+        }
+        res.json({
+            message: "Usuario actualizado exitosamente",
+            user: updatedUser
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error:error.message});
     }
-}
+};
 
-
-
+// DELETE
 const deleteUserController = async ( req,res ) =>{
     try {
-        const {id} = req.params
-    await deleteUserModule(id)
-    res.send("Cuenta Eliminada")
-        
+        const {id} = req.params;
+        const deleted = await deleteUserModule(id);
+        if(!deleted){
+            return res.status(404).json({error:"Usuario no encontrado"});
+        }
+        res.json({message: "Usuario eliminado"});
     } catch (error) {
-        res.status(500).json(error)
-        
+        res.status(500).json({error:error.message})
     }
-    
-}
+};
 
-
-module.exports = {deleteUserController, actualizarController, loginController, registerController}
+module.exports = {
+    loginController,
+    registerController,
+    updateUserController,
+    deleteUserController
+};

@@ -8,7 +8,6 @@ import { createOrder } from "@services/order.service";
 import "@styles/cart.css";
 
 function Cart() {
-
   const {
     cart,
     removeFromCart,
@@ -16,9 +15,7 @@ function Cart() {
     decreaseQuantity,
     clearCart
   } = useContext(CartContext);
-
   const navigate = useNavigate();
-
   const total = cart.reduce(
     (acc, product) => acc + product.price * product.quantity,
     0
@@ -29,16 +26,16 @@ function Cart() {
       const order = {
         user_id: 1, // Reemplazar con el ID del usuario autenticado
         total_price: total,
-        status: "pending"
+        cart: cart,
       };
       await createOrder(order);
       clearCart();
-      navigate("/");
+      alert("Pedido realizado con éxito");
     } catch (error) {
-      console.error("Error al crear el pedido:", error);
+      console.error(error);
+      alert("Error al procesar pedido");
     }
   };
-
 
   if (cart.length === 0) {
     return (
@@ -100,7 +97,7 @@ function Cart() {
         <div className="cart-buttons">
 
         <button className="cart-btn checkout" onClick={handleCheckout}>
-          Confirmar pedido
+          Finalizar compra
         </button>
 
           <button

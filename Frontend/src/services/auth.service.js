@@ -5,17 +5,16 @@ export const registerUser = async (userData) => {
     return res.data;
 };
 
-export const loginUser = async (credentials) => {
-    const res = await API.post('/auth/login', credentials);
-    const { token } = res.data;
-    if (token) {
-        localStorage.setItem('token', token);
-    }
+export const loginUser = async (data) => {
+    const res = await API.post('/auth/login', data);
+    localStorage.setItem('token', res.data.token);
+    localStorage.setItem('user', JSON.stringify(res.data.user));
     return res.data;
 };
 
 export const logoutUser = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
 };
 
 export const authService = {

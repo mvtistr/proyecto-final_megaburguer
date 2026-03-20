@@ -1,120 +1,63 @@
-const pool = require('@db/db.js');
-
-
-const { getProductsPaginacion} = require('../modules/product.modul.js')
-
-
-
+const productModel = require('../models/product.model.js');
 
 const getProducts = async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM products');
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        const products = await productModel.getProducts();
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
 const getProductById = async (req, res) => {
-    const { id } = req.params;
     try {
-        const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+        const product = await productModel.getProductsById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
-        res.json(result.rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.json(product);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
 const createProduct = async (req, res) => {
-    const { name, ingredients, price, image_url, category, is_featured, is_offer, stock } = req.body;
     try {
-        const result = await pool.query(
-            `INSERT INTO products (name, ingredients, price, image_url, category, is_featured, is_offer, stock)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-            [name, ingredients, price, image_url, category, is_featured, is_offer, stock]
-        );
-        res.status(201).json(result.rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        const newProduct = await productModel.createProduct(req.body);
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
 const updateProduct = async (req, res) => {
-    const { id } = req.params;
-    const { name, ingredients, price, image_url, category, is_featured, is_offer, stock } = req.body;
     try {
-        const result = await pool.query(
-            `UPDATE products SET name = $1, ingredients = $2, price = $3, image_url = $4, category = $5, is_featured = $6, is_offer = $7, stock = $8 WHERE id = $9 RETURNING *`,
-            [name, ingredients, price, image_url, category, is_featured, is_offer, stock, id]
-        );
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+        const updated = await productModel.updateProduct(req.params.id, req.body);
+        if (!updated) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
-        res.json(result.rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error updating product' });
+        res.json(updated);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
 const deleteProduct = async (req, res) => {
-    const { id } = req.params;
     try {
-        const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+        const deleted = await productModel.deleteProduct(req.params.id);
+        if (!deleted) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
-        res.json({ message: 'Product deleted', product: result.rows[0] });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error deleting product' });
+        res.json({ message: 'Producto eliminado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
-
-
-
-// SECCION DE PAGINADO Y FILTRO DE PRODUCTOS
-
-
-
-
-const getProductsPaginacionController = async(req,res) =>{
-    try {
-        const {order_by  = 'id_ASC' , limit= 6, page=1} = req.query
-        const products = await getProductsPaginacion(
-            order_by,
-            number(limit),
-            number(page)
-        )
-
-        res.status(200).json({products})
-
-        
-    } catch (error) {
-        res.status(500).json({error:'error con la peticion'})
-        
-    }
-
-}
-
-
-
-
-
-
 
 module.exports = {
     getProducts,
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct,
-    getProductsPaginacionController
-   
+    deleteProduct
 };

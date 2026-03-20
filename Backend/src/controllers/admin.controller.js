@@ -1,4 +1,4 @@
-const {modificarProductoModule, deleteProductoModule, agregarProductoModule} = require('../modules/admin.modul.js')
+const {modificarProductoModule, deleteProductoModule, agregarProductoModule} = require('../models/admin.modul.js')
 
 
 const modificarProductoController = async (req,res)=>{
