@@ -9,6 +9,8 @@ import Product from "@pages/Product.jsx";
 import Profile from "@pages/Profile.jsx";
 import Register from "@pages/Register.jsx";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import Header from "@components/Header.jsx";
 import Footer from "@components/Footer.jsx";
 
@@ -21,17 +23,23 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Gallery />} />
         <Route path="/product/:id" element={<Product />} />
-
         <Route path="/cart" element={<Cart />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/menu" element={<Gallery />} />
-        <Route path="/register" element ={<Register />}/>
-        <Route path= "/login" element = {<Login />} /> 
-        <Route path= "/admin" element = {<AdminView />} /> 
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin" element={<AdminView />} />
+
+        {/* ruta 404 */}
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
 
       <Footer />

@@ -1,8 +1,18 @@
 import API from './api.js';
 
 export const getProducts = async () => {
-    const res = await API.get('/products');
-    return res.data;
+    try {
+        const res = await API.get('/products');
+        if(!res.data){
+            throw new Error("EMPTY_DATA");
+        }
+        return res.data;
+    } catch (error) {
+        if(error.response){
+            throw new Error(error.response.data?.message || "API_ERROR");
+        }
+        throw new Error("NETWORK_ERROR");
+    }
 };
 
 export const getProductById = async (id) => {
