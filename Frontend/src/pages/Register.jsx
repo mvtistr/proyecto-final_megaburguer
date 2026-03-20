@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { registerUser } from "@services/authService";
+import { registerUser } from "@services/auth.service";
 
 import "@styles/register_login.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
