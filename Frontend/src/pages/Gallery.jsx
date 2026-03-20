@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Icons } from "@shared/icons.js";
 
-import { getProducts } from "@services/product.service";
+import { getProducts } from "@services/product.service.js";
 
 import "@styles/menu.css";
 
