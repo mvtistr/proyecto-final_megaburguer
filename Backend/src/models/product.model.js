@@ -5,7 +5,7 @@ const getProducts = async () => {
     return result.rows;
 };
 
-const getProductsById = async (id) => {
+const getProductById = async (id) => {
     const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
     return result.rows[0];
 };
@@ -53,16 +53,16 @@ const updateProduct = async (id, product) => {
 };
 
 const deleteProduct = async (id) => {
-  const result = await pool.query(
+    const result = await pool.query(
     'DELETE FROM products WHERE id = $1 RETURNING *',
     [id]
-  );
-  return result.rows[0];
+    );
+    return result.rows[0];
 };
 
 module.exports = {
     getProducts,
-    getProductsById,
+    getProductById,
     createProduct,
     updateProduct,
     deleteProduct

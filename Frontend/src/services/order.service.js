@@ -1,38 +1,36 @@
 import api from "./api";
+import { errors } from "./errors";
 
-export const getOrders = async () => {
+export const createOrder = async (orderData) => {
   try {
-    const res = await api.get("/orders");
+    const res = await api.post("/orders", orderData);
+    if(!res.data){
+      throw new Error(errors.empty);
+    }
     return res.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data?.message || "API_ERROR");
-    }
-    throw new Error("NETWORK_ERROR");
+    handleError(error);
+  }
+};
+
+export const getUserOrders = async () => {
+  try {
+    const res = await api.get("/orders/my-orders");
+    return res.data;
+  } catch (error) {
+    handleError(error);
   }
 };
 
 export const getOrderById = async (id) => {
   try {
     const res = await api.get(`/orders/${id}`);
+    if(!res.data){
+      throw new Error(errors.not_found);
+    }
     return res.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data?.message || "API_ERROR");
-    }
-    throw new Error("NETWORK_ERROR");
-  }
-};
-
-export const createOrder = async (orderData) => {
-  try {
-    const res = await api.post("/orders", orderData);
-    return res.data;
-  } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data?.message || "API_ERROR");
-    }
-    throw new Error("NETWORK_ERROR");
+    handleError(error);
   }
 };
 
@@ -41,10 +39,7 @@ export const updateOrder = async (id, orderData) => {
     const res = await api.put(`/orders/${id}`, orderData);
     return res.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data?.message || "API_ERROR");
-    }
-    throw new Error("NETWORK_ERROR");
+    handleError(error);
   }
 };
 
@@ -53,10 +48,7 @@ export const deleteOrder = async (id) => {
     const res = await api.delete(`/orders/${id}`);
     return res.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data?.message || "API_ERROR");
-    }
-    throw new Error("NETWORK_ERROR");
+    handleError(error);
   }
 };
 
@@ -65,15 +57,12 @@ export const getOrderDetails = async (id) => {
     const res = await api.get(`/orders/${id}/details`);
     return res.data;
   } catch (error) {
-    if (error.response) {
-      throw new Error(error.response.data?.message || "API_ERROR");
-    }
-    throw new Error("NETWORK_ERROR");
+    handleError(error);
   }
 };
 
 export const orderService = {
-  getOrders,
+  getUserOrders,
   getOrderById,
   createOrder,
   updateOrder,
