@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import api from "./api";
 import { errors } from "./errors";
 
