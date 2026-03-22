@@ -1,6 +1,8 @@
 import api from "./api.js";
 import { errors, handleError } from "./errors.js";
 
+import toast from "react-hot-toast";
+
 export const getProducts = async () => {
     try {
         const res = await api.get("/products");
@@ -28,6 +30,7 @@ export const getProductById = async (id) => {
 export const createProduct = async (data) => {
     try {
         const res = await api.post("/products", data);
+        toast.success("Producto creado");
         return res.data;
     } catch (error) {
         handleError(error);
@@ -37,6 +40,7 @@ export const createProduct = async (data) => {
 export const deleteProduct = async (id) => {
     try{
         const res = await api.delete(`/products/${id}`);
+        toast.success("Producto eliminado");
         return res.data;
     } catch (error) {
         handleError(error);
@@ -49,6 +53,7 @@ export const updateProduct = async (id, data) => {
         if(!res.data){
             throw new Error(errors.empty);
         }
+        toast.success("Producto actualizado");
         return res.data;
     } catch (error) {
         handleError(error);

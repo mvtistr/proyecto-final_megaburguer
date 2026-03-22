@@ -1,9 +1,12 @@
 import api from "./api";
 import { errors, handleError } from "./errors";
 
+import toast from "react-hot-toast";
+
 export const registerUser = async (userData) => {
     try {
         const res = await api.post("/auth/register", userData);
+        toast.success("CUenta creada correctamente");
         return res.data;
     } catch (error) {
         handleError(error);
@@ -16,6 +19,9 @@ export const loginUser = async (data) => {
         if (!res.data?.token || !res.data?.user) {
             throw new Error(errors.empty);
         }
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        toast.success("Bienvenido 👋");
         return res.data;
     } catch (error) {
         handleError(error);

@@ -1,5 +1,8 @@
+import toast from "react-hot-toast";
 import api from "./api";
 import { errors } from "./errors";
+
+import toast from "react-hot-toast";
 
 export const createOrder = async (orderData) => {
   try {
@@ -7,6 +10,7 @@ export const createOrder = async (orderData) => {
     if(!res.data){
       throw new Error(errors.empty);
     }
+    toast.success("Pedido realizado con éxito 🍔");
     return res.data;
   } catch (error) {
     handleError(error);
@@ -37,6 +41,7 @@ export const getOrderById = async (id) => {
 export const updateOrder = async (id, orderData) => {
   try {
     const res = await api.put(`/orders/${id}`, orderData);
+    toast.success("Pedido actualizado");
     return res.data;
   } catch (error) {
     handleError(error);
@@ -46,6 +51,7 @@ export const updateOrder = async (id, orderData) => {
 export const deleteOrder = async (id) => {
   try {
     const res = await api.delete(`/orders/${id}`);
+    toast.success("Pedido eliminado");
     return res.data;
   } catch (error) {
     handleError(error);

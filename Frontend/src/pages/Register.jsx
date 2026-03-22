@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+import toast from "react-hot-toast";
+
 import { registerUser } from "@services/auth.service.js";
 
 import "@styles/register_login.css";
@@ -18,7 +20,7 @@ function Register() {
 
   const subir = async (e) => {
     e.preventDefault();
-
+    const toastId = toast.loading("Creando cuenta ...");
     if (
       !email ||
       !nombre ||
@@ -27,12 +29,12 @@ function Register() {
       !password ||
       !confirmPassword
     ) {
-      alert("Debes llenar todos los datos");
+      toast.error("Debes llenar todos los datos");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Las contraseñas deben coincidir");
+      toast.error("Las contraseñas deben coincidir");
       return;
     }
 
@@ -44,12 +46,13 @@ function Register() {
         direction: direccion,
         phone: telefono,
       });
-
-      alert("Registro exitoso 🍔");
+      toast.success("Registro exitoso 🍔");
       navigate("/login");
     } catch (error) {
-      alert(error.message || "Error al registrarse");
+      toast.error(error.message || "Error al registrarse");
       console.error("Error al registrarse:", error);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 
