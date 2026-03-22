@@ -2,9 +2,11 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { CartContext } from "@context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 
 import { createOrder } from "@services/order.service";
+
+import toast from "react-hot-toast";
 
 import "@styles/cart.css";
 
@@ -27,11 +29,11 @@ function Cart() {
 
   const handleCheckout = async () => {
     if (!user) {
-      alert("Debes iniciar sesión para finalizar la compra");
+      toast.error("Debes iniciar sesión para finalizar la compra");
       navigate("/login");
       return;
     }
-
+    const toastId = toast.loading("Procesando pedido...");
     try {
       const order = {
         user_id: user.id,
@@ -42,14 +44,14 @@ function Cart() {
           price: Number(product.price),
         })),
       };
-
       await createOrder(order);
       clearCart();
-      alert("Pedido realizado con éxito");
-      navigate("/profile");
     } catch (error) {
       console.error("Error al procesar pedido:", error);
-      alert("Error al procesar pedido");
+      toast.error("Error al procesar pedido");
+    } finally {
+      toast.dismiss(toastId);
+      navigate("/profile");
     }
   };
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import toast from "react-hot-toast";
+
 import { Icons } from "@shared/icons.js";
 import { getProducts } from "../services/product.service";
 
@@ -11,14 +13,19 @@ function Home() {
 
   const [products, setProducts] = useState([]);
   const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadProducts = async () => {
+      const toastId = toast.loading("Cargando productos...");
       try {
         const data = await getProducts();
         setProducts(data);
       } catch (error) {
         console.error("Error loading products:", error);
+      } finally {
+        setLoading(false);
+        toast.dismiss(toastId);
       }
     };
 

@@ -1,11 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import toast from "react-hot-toast";
+
 import { CartContext } from "@context/CartContext";
 import { useAuth } from "@context/AuthContext";
+
 import { getProductById, updateProduct } from "@services/product.service";
 
 import "@styles/product.css";
+
 import { Icons } from "@shared/icons.js";
 
 function Product() {
@@ -14,8 +18,9 @@ function Product() {
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
   const [product, setProduct] = useState(null);
-
   const isAdmin = user?.role === "admin";
+  
+  const [loading, setLoading] =useState(true);
 
   const handleToggleAdminField = async (campo) => {
     try {
@@ -26,24 +31,25 @@ function Product() {
       await updateProduct(id, updatedProduct);
     } catch (error) {
       console.error("Error actualizando producto:", error);
-      alert("No se pudo actualizar el producto");
+      toast.error("No se pudo actualizar el producto");
     }
   };
 
   useEffect(() => {
     const loadProduct = async () => {
+      const toastId = toast.loading("Cargando producto...");
       try {
         const data = await getProductById(id);
         setProduct(data);
       } catch (error) {
         console.error("Error cargando el producto:", error);
+      } finally {
+        setLoading(false);
+        toast.dismiss(toastId);
       }
     };
-
     if (id) loadProduct();
   }, [id]);
-
-  if (!product) return <h2>Cargando producto...</h2>;
 
   const handleAddToCart = () => {
     addToCart(product);

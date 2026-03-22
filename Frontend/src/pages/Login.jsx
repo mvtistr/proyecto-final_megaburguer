@@ -5,6 +5,8 @@ import { BsPersonFill } from "react-icons/bs";
 import { loginUser } from "@services/auth.service.js";
 import { useAuth } from "../context/AuthContext";
 
+import toast from "react-hot-toast";
+
 import "@styles/home.css";
 import "@styles/register_login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,27 +23,25 @@ function Login() {
 
   const entrar = async (e) => {
     e.preventDefault();
-
+    const toastId = toast.loading("Iniciando sesión...");
     if (!email || !password) {
-      alert("Debes completar todos los campos");
+      toast.error("Debes completar todos los campos");
       return;
     }
-
     try {
       const data = await loginUser({ email, password });
-
       login(data.user, data.token);
-
-      alert(`👋 Bienvenido ${data.user.name}! 🍔`);
-
+      toast.success(`👋 Bienvenido ${data.user.name}! 🍔`);
       if (data.user.role === "admin") {
         navigate("/admin");
       } else {
         navigate(from);
       }
     } catch (error) {
-      alert("Correo o contraseña incorrectos");
+      toast.error("Correo o contraseña incorrectos");
       console.error("Error al iniciar sesión:", error);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 

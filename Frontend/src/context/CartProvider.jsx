@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { CartContext } from "./CartContext";
 import PropTypes from "prop-types";
-import Notification from "@components/Notification";
+
+import toast from "react-hot-toast";
 
 function CartProvider({ children }) {
 
@@ -10,45 +11,33 @@ function CartProvider({ children }) {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  const [notification, setNotification] = useState({ 
-    show: false,
-    message: "" 
-  });
-
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
-
-  const showNotification = (message) => {
-    setNotification({ show: true, message });
-
-    setTimeout(() => {
-      setNotification({ show: false, message: "" });
-    }, 2000);
-  };
 
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existing = prevCart.find(item => item.id === product.id);
 
       if (existing) {
-        showNotification(`🍔 ${product.name} agregado nuevamente al pedido 🎒`);
+        toast.succes(`🍔 ${product.name} agregado nuevamente al pedido 🎒`);
         return prevCart.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      showNotification(`🍔 ${product.name} agregado al pedido 🎒`);
+      toast.success(`🍔 ${product.name} agregado al pedido 🎒`)
       return [...prevCart, { ...product, quantity: 1 }];
     });
   };
 
   const removeFromCart = (id) => {
+    const confirmDelete = window.confirm("¿Eliminar producto del pedido?");
+    if(!confirmDelete) return;
     const product = cart.find(item => item.id === id);
-    showNotification(`🗑 ${product?.name || "Producto"} eliminado`)
-
     setCart(cart.filter(item => item.id !== id));
+    toast.success(`🗑 ${product?.name || "Producto"} eliminado`);
   };
 
   const increaseQuantity = (id) => {
@@ -68,8 +57,10 @@ function CartProvider({ children }) {
   };
 
   const clearCart = () => {
-    showNotification("🧹 Pedido vaciado");
+    const confirmClear = BsWindowSidebar.confirm("¿Vaciar pedido completo?");
+    if(!confirmClear) return;
     setCart([]);
+    toast.success("🧹 Pedido vaciado");
   };
 
   const cartCount = cart.reduce(
@@ -90,11 +81,6 @@ function CartProvider({ children }) {
       }}
     >
       {children}
-
-      <Notification
-        show={notification.show}
-        message={notification.message}
-        />
     </CartContext.Provider>
   );
 }

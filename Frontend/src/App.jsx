@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import AdminView from "@pages/AdminView";
 import Cart from "@pages/Cart.jsx";
@@ -17,6 +18,7 @@ import Footer from "@components/Footer.jsx";
 function App() {
   return (
     <>
+    <Toaster position="top-right"/>
       <Header />
 
       <Routes>

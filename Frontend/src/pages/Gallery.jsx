@@ -4,23 +4,29 @@ import { Link } from "react-router-dom";
 import { Icons } from "@shared/icons.js";
 import { getProducts } from "@services/product.service.js";
 
+import toast from "react-hot-toast";
+
 import "@styles/menu.css";
 
 function Gallery() {
   const [products, setProducts] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const visibleProducts = 4;
 
   useEffect(() => {
     const loadProducts = async () => {
+      const toastId = toast.loading("Cargando menú...");
       try {
         const data = await getProducts();
         setProducts(data);
       } catch (error) {
         console.error("Error cargando los productos:", error);
+      } finally {
+        setLoading(false);
+        toast.dismiss(toastId);
       }
     };
-
     loadProducts();
   }, []);
 
