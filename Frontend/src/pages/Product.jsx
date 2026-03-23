@@ -65,11 +65,10 @@ function Product() {
   if(error || !product) return <p>Error al cargar el producto</p>;
   console.log("PRODUCT:", product);
   console.log("INGREDIENTS RAW:", product.ingredients);
-  const ingredientsList =
-    product?.ingredients
+  const ingredientsList = product.ingredients
       ? product.ingredients.split(",").map(i => i.trim())
       : [];
-
+  console.log("LIST:", ingredientsList);
   return (
     <div className="product-container">
       <div className="product-image-section">
@@ -154,7 +153,7 @@ function Product() {
 
           <h4>Ingredientes</h4>
           <ul>
-            {ingredientsList.length < 0 ? (
+            {ingredientsList.length > 0 ? (
             ingredientsList.map((item, index) => (
               <li key={index}>{item}</li>
             ))
