@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { CartContext } from "./CartContext";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const { setCart } = useContext(CartContext); 
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -22,6 +24,11 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+
+      localStorage.removeItem("cart"); 
+    if (setCart) setCart([]);
+
+    
     setUser(null);
   };
 

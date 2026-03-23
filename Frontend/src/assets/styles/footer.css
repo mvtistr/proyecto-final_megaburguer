@@ -1,13 +1,9 @@
 .footer {
-  background: linear-gradient(
-    135deg,
-    var(--tertiary) 15%,
-    var(--secondary) 70%,
-    var(--primary) 85%
-  );
+   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #252525 100%);
 
   padding: 50px 8%;
   margin-top: 60px;
+  border-top: 5px solid rgb(255, 135, 50);
 }
 
 /* CONTENEDOR PRINCIPAL */
@@ -34,12 +30,14 @@
   height: 220px;
   border: none;
   border-radius: 10px;
+  filter: grayscale(0.3) contrast(1.1);
 }
 
 /* LINKS NAVEGACION */
 .footer-links ul {
   list-style: none;
   padding: 0;
+  align-items: center;
 }
 
 .footer-links li {
@@ -60,6 +58,7 @@
 /* REDES SOCIALES */
 .footer-social-icons {
   display: flex;
+  justify-content: center;
   gap: 20px;
   margin-top: 10px;
   color: black;
@@ -71,7 +70,8 @@
 }
 
 .footer-social-icons a:hover {
-  transform: sca  le(1.2);
+  color: rgb(255, 135, 50);
+  transform: scale(1.3) translateY(-5px);
 }
 
 /* COPYRIGHT */

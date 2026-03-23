@@ -20,7 +20,7 @@ function CartProvider({ children }) {
       const existing = prevCart.find(item => item.id === product.id);
 
       if (existing) {
-        toast.succes(`🍔 ${product.name} agregado nuevamente al pedido 🎒`);
+        toast.success(`🍔 ${product.name} agregado nuevamente al pedido 🎒`);
         return prevCart.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
@@ -31,6 +31,11 @@ function CartProvider({ children }) {
       return [...prevCart, { ...product, quantity: 1 }];
     });
   };
+
+  const resetCart = () => {
+  setCart([]);
+  localStorage.removeItem("cart");
+};
 
   const removeFromCart = (id) => {
     const confirmDelete = window.confirm("¿Eliminar producto del pedido?");
@@ -71,6 +76,7 @@ function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
+        resetCart,
         cart,
         addToCart,
         removeFromCart,
