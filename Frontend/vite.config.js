@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    outDir: "dist"
+  },
   plugins: [react()],
     resolve: {
     alias: {
@@ -18,4 +21,4 @@ export default defineConfig({
       '@shared': fileURLToPath(new URL('./src/shared', import.meta.url))
     },
   },
-})
+});
