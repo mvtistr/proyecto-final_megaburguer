@@ -17,16 +17,18 @@ function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
+
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] =useState(true);
+  const [error, setError] = useState(false);
+
   const isAdmin = user?.role === "admin";
   
-  const [loading, setLoading] =useState(true);
-
   const handleToggleAdminField = async (campo) => {
+    if(!product) return;
     try {
       const nuevoValor = !product[campo];
       const updatedProduct = { ...product, [campo]: nuevoValor };
-
       setProduct(updatedProduct);
       await updateProduct(id, updatedProduct);
     } catch (error) {
@@ -40,9 +42,12 @@ function Product() {
       const toastId = toast.loading("Cargando producto...");
       try {
         const data = await getProductById(id);
+        if(!data) throw new Error("Producto vacío");
         setProduct(data);
       } catch (error) {
         console.error("Error cargando el producto:", error);
+        setError(true);
+        toast.error("Error al cargar el producto");
       } finally {
         setLoading(false);
         toast.dismiss(toastId);
@@ -52,9 +57,12 @@ function Product() {
   }, [id]);
 
   const handleAddToCart = () => {
+    if(!product) return;
     addToCart(product);
   };
 
+  if (loading) return <p>Cargando producto...</p>;
+  if(error || !product) return <p>Error al cargar el producto</p>;
   const ingredientsList =
     typeof product.ingredients === "string"
       ? product.ingredients.split(",").map((item) => item.trim())
@@ -132,7 +140,7 @@ function Product() {
         )}
 
         <h3 className="product-price">
-          ${Number(product.price).toLocaleString("es-CL")}
+          ${Number(product.price || 0).toLocaleString("es-CL")}
         </h3>
 
         <hr />
@@ -143,9 +151,13 @@ function Product() {
 
           <h4>Ingredientes</h4>
           <ul>
-            {ingredientsList.map((item, index) => (
+            {ingredientsList.length < 0 ? (
+            ingredientsList.map((item, index) => (
               <li key={index}>{item}</li>
-            ))}
+            ))
+            ) : (
+              <li>Sin ingredientes disponibles</li>
+            )}
           </ul>
         </div>
 
