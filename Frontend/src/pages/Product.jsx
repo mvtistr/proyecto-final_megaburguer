@@ -63,8 +63,10 @@ function Product() {
 
   if (loading) return <p>Cargando producto...</p>;
   if(error || !product) return <p>Error al cargar el producto</p>;
+  console.log("PRODUCT:", product);
+  console.log("INGREDIENTS RAW:", product.ingredients);
   const ingredientsList =
-    typeof product.ingredients === "string"
+    product?.ingredients
       ? product.ingredients.split(",").map(i => i.trim())
       : [];
 
