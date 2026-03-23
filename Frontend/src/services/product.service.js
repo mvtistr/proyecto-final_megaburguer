@@ -12,6 +12,7 @@ export const getProducts = async () => {
         return res.data;
     } catch (error) {
         handleError(error);
+        throw error;
     }
 };
 
@@ -24,6 +25,7 @@ export const getProductById = async (id) => {
         return res.data;
     } catch (error) {
         handleError(error);
+        throw error;
     }
 };
 
@@ -34,6 +36,7 @@ export const createProduct = async (data) => {
         return res.data;
     } catch (error) {
         handleError(error);
+        throw error;
     }
 };
 
@@ -44,6 +47,7 @@ export const deleteProduct = async (id) => {
         return res.data;
     } catch (error) {
         handleError(error);
+        throw error;
     }
 };
 
@@ -57,6 +61,7 @@ export const updateProduct = async (id, data) => {
         return res.data;
     } catch (error) {
         handleError(error);
+        throw error;
     }
 };
 
