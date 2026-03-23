@@ -64,7 +64,7 @@ function Home() {
           src={featured.image_url}
           alt={featured.name}
           className="hero-image"
-          onClick={() => navigate(`/product/${featured.id}`)}
+          onClick={() => navigate(`/products/${featured.id}`)}
           style={{ cursor: "pointer", height: "400px", width: "500px" }}
         />
 
@@ -76,7 +76,7 @@ function Home() {
           <h2 className="title-font">{featured.name}</h2>
           <button
             className="shop-btn"
-            onClick={() => navigate(`/product/${featured.id}`)}
+            onClick={() => navigate(`/products/${featured.id}`)}
           >
             Ver Producto
           </button>
@@ -91,7 +91,7 @@ function Home() {
             <div
               key={product.id}
               className="product-card"
-              onClick={() => navigate(`/product/${product.id}`)}
+              onClick={() => navigate(`/products/${product.id}`)}
               style={{ cursor: "pointer" }}
             >
               <img

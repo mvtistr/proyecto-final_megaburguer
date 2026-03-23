@@ -60,7 +60,7 @@ function Gallery() {
         <div className="gallery-grid">
           {visible.map((product) => (
             <Link
-              to={`/product/${product.id}`}
+              to={`/products/${product.id}`}
               key={product.id}
               className="product-card"
             >
