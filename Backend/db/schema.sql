@@ -8,6 +8,7 @@ CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     ingredients TEXT,
+    description TEXT,
     price INTEGER NOT NULL,
     image_url TEXT,
     is_featured BOOLEAN DEFAULT false,
@@ -49,21 +50,22 @@ CREATE TABLE details (
     price INTEGER NOT NULL
 );
 
-INSERT INTO products (name, ingredients, price, image_url, category, is_featured, is_offer, stock)
+INSERT INTO products
+(name, ingredients, description, price, image_url, category, is_featured, is_offer, stock)
 VALUES
-('Mega Burguer Clasica', 'Pan brioche tostado, doble carne 100% vacuno, queso cheddar derretido, lechuga fresca, tomate y salsa especial Mega.', 9990, 'https://images.pexels.com/photos/2271107/pexels-photo-2271107.jpeg', 'Burguers', true, false, 20),
-('Combo Mega BBQ', 'Hamburguesa BBQ con papas fritas crujientes y bebida 350ml.', 11990, 'https://images.pexels.com/photos/2089717/pexels-photo-2089717.jpeg', 'Combos', false, true, 15),
-('Combo Doble Queso', 'Doble carne con doble queso cheddar, papas medianas y bebida.', 10990, 'https://images.pexels.com/photos/5908286/pexels-photo-5908286.jpeg', 'Combos', false, true, 10),
-('Mega Chicken Burguer', 'Hamburguesa de pollo crispy con lechuga, tomate y mayonesa casera.', 8990, 'https://images.pexels.com/photos/9975765/pexels-photo-9975765.jpeg', 'Burguers', false, true, 18),
-('Combo Familiar Mega', '4 hamburguesas clásicas, 2 porciones grandes de papas y 4 bebidas.', 24990, 'https://images.pexels.com/photos/4021939/pexels-photo-4021939.jpeg', 'Combos', false, true, 5),
-('Mega Bacon Burguer', 'Hamburguesa con doble carne, tocino crujiente, queso cheddar y salsa BBQ.', 10490, 'https://images.pexels.com/photos/660282/pexels-photo-660282.jpeg', 'Burguers', false, false, 20),
-('Triple Mega Burguer', 'Hamburguesa triple carne con triple queso y salsa especial.', 11990, 'https://media.istockphoto.com/id/1453739155/es/foto/toma-vertical-de-una-deliciosa-hamburguesa-jugosa-con-triple-hamburguesa-sobre-una-mesa-de.jpg?b=1&s=612x612&w=0&k=20&c=2CYj870Znz_Lqv2zIbrHBArxV6RnKNxdAwAKdirGui4=', 'Burguers', false, false, 15),
-('Veggie Burguer', 'Hamburguesa vegetariana con medallón vegetal, palta y vegetales frescos.', 8990, 'https://images.unsplash.com/photo-1520072959219-c595dc870360', 'Burguers', false, false, 12),
-('Papas Fritas Clasicas', 'Papas fritas crujientes recién hechas.', 2990, 'https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg', 'Fries', false, false, 40),
-('Papas Con Cheddar', 'Papas fritas con abundante queso cheddar.', 3990, 'https://media.istockphoto.com/id/1301802151/es/foto/queso-cheddar-vertido-o-tirado-de-las-papas-fritas-fritas-en-la-parte-superior.jpg?b=1&s=612x612&w=0&k=20&c=iQLUDsbIDa007_hVWA-C2Wogy4YHNAIfLU1_AvqFcqQ=', 'Fries', false, false, 30),
-('Papas Con Bacon', 'Papas fritas con cheddar derretido y tocino crujiente.', 4490, 'https://media.istockphoto.com/id/1303663892/es/foto/patatas-fritas-con-cheddar-y-tocino.jpg?b=1&s=612x612&w=0&k=20&c=ET7skNpkXjhbPOEHoY6eZvXGdGXP69bav0Ao17g3tp4=', 'Fries', false, false, 25),
-('Coca-Cola 350ml', 'Bebida Coca Cola clásica 350ml.', 1990, 'https://media.istockphoto.com/id/1062831310/es/foto/vierta-el-refresco-en-vaso-con-poco-de-hielo-sobre-fondo-oscuro.jpg?b=1&s=612x612&w=0&k=20&c=h1ntgfXP_ABi2H945DfU8c-di1f1wj12LPrnPPojFTE=', 'Drinks', false, false, 50),
-('Sprite 350ml', 'Bebida Sprite refrescante 350ml.', 1990, 'https://images.unsplash.com/photo-1592860893757-84536a1c9b82?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3ByaXRlfGVufDB8fDB8fHww', 'Drinks', false, false, 50),
-('Fanta 350ml', 'Bebida sabor naranja.', 1990, 'https://images.unsplash.com/photo-1624517452488-04869289c4ca?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFudGF8ZW58MHx8MHx8fDA%3D', 'Drinks', false, false, 50),
-('Milkshake Chocolate', 'Milkshake cremoso de chocolate.', 3490, 'https://images.unsplash.com/photo-1572490122747-3968b75cc699', 'Drinks', false, false, 20),
-('Onion Rings', 'Aros de cebolla crujientes con salsa especial.', 3490, 'https://images.unsplash.com/photo-1639024471283-03518883512d', 'Fries', false, false, 25);
+('Mega Burguer Clasica', 'Pan brioche tostado, doble carne 100% vacuno, queso cheddar derretido, lechuga fresca, tomate y salsa especial Mega.', 'Hamburguesa clásica premium con doble carne jugosa y sabor intenso.', 9990, 'https://images.pexels.com/photos/2271107/pexels-photo-2271107.jpeg', 'Burguers', true, false, 20),
+('Combo Mega BBQ', 'Hamburguesa BBQ con papas fritas crujientes y bebida 350ml.', 'Combo BBQ completo con papas doradas y bebida refrescante.', 11990, 'https://images.pexels.com/photos/2089717/pexels-photo-2089717.jpeg', 'Combos', false, true, 15),
+('Combo Doble Queso', 'Doble carne con doble queso cheddar, papas medianas y bebida.', 'Explosión de queso y carne en un combo irresistible.', 10990, 'https://images.pexels.com/photos/5908286/pexels-photo-5908286.jpeg', 'Combos', false, true, 10),
+('Mega Chicken Burguer', 'Hamburguesa de pollo crispy con lechuga, tomate y mayonesa casera.', 'Pollo crujiente con ingredientes frescos y sabor suave.', 8990, 'https://images.pexels.com/photos/9975765/pexels-photo-9975765.jpeg', 'Burguers', false, true, 18),
+('Combo Familiar Mega', '4 hamburguesas clásicas, 2 porciones grandes de papas y 4 bebidas.', 'Combo ideal para compartir en familia.', 24990, 'https://images.pexels.com/photos/4021939/pexels-photo-4021939.jpeg', 'Combos', false, true, 5),
+('Mega Bacon Burguer', 'Hamburguesa con doble carne, tocino crujiente, queso cheddar y salsa BBQ.', 'Doble carne con bacon crocante y sabor BBQ intenso.', 10490, 'https://images.pexels.com/photos/660282/pexels-photo-660282.jpeg', 'Burguers', false, false, 20),
+('Triple Mega Burguer', 'Hamburguesa triple carne con triple queso y salsa especial.', 'Máximo nivel: triple carne y triple queso.', 11990, 'https://media.istockphoto.com/id/1453739155/es/foto/toma-vertical-de-una-deliciosa-hamburguesa-jugosa-con-triple-hamburguesa-sobre-una-mesa-de.jpg?b=1&s=612x612&w=0&k=20&c=2CYj870Znz_Lqv2zIbrHBArxV6RnKNxdAwAKdirGui4=', 'Burguers', false, false, 15),
+('Veggie Burguer', 'Hamburguesa vegetariana con medallón vegetal, palta y vegetales frescos.', 'Opción vegetariana fresca y balanceada.', 8990, 'https://images.unsplash.com/photo-1520072959219-c595dc870360', 'Burguers', false, false, 12),
+('Papas Fritas Clasicas', 'Papas fritas crujientes recién hechas.', 'Clásicas papas doradas y crujientes.', 2990, 'https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg', 'Fries', false, false, 40),
+('Papas Con Cheddar', 'Papas fritas con abundante queso cheddar.', 'Papas con cheddar cremoso derretido.', 3990, 'https://media.istockphoto.com/id/1301802151/es/foto/queso-cheddar-vertido-o-tirado-de-las-papas-fritas-fritas-en-la-parte-superior.jpg?b=1&s=612x612&w=0&k=20&c=iQLUDsbIDa007_hVWA-C2Wogy4YHNAIfLU1_AvqFcqQ=', 'Fries', false, false, 30),
+('Papas Con Bacon', 'Papas fritas con cheddar derretido y tocino crujiente.', 'Papas con queso y bacon crocante.', 4490, 'https://media.istockphoto.com/id/1303663892/es/foto/patatas-fritas-con-cheddar-y-tocino.jpg?b=1&s=612x612&w=0&k=20&c=ET7skNpkXjhbPOEHoY6eZvXGdGXP69bav0Ao17g3tp4=', 'Fries', false, false, 25),
+('Coca-Cola 350ml', 'Bebida Coca Cola clásica 350ml.', 'Refresco clásico ideal para acompañar.', 1990, 'https://media.istockphoto.com/id/1062831310/es/foto/vierta-el-refresco-en-vaso-con-poco-de-hielo-sobre-fondo-oscuro.jpg?b=1&s=612x612&w=0&k=20&c=h1ntgfXP_ABi2H945DfU8c-di1f1wj12LPrnPPojFTE=', 'Drinks', false, false, 50),
+('Sprite 350ml', 'Bebida Sprite refrescante 350ml.', 'Refresco sabor limón ligero.', 1990, 'https://images.unsplash.com/photo-1592860893757-84536a1c9b82?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3ByaXRlfGVufDB8fDB8fHww', 'Drinks', false, false, 50),
+('Fanta 350ml', 'Bebida sabor naranja.', 'Refresco dulce sabor naranja.', 1990, 'https://images.unsplash.com/photo-1624517452488-04869289c4ca?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFudGF8ZW58MHx8MHx8fDA%3D', 'Drinks', false, false, 50),
+('Milkshake Chocolate', 'Milkshake cremoso de chocolate.', 'Batido espeso con sabor intenso a chocolate.', 3490, 'https://images.unsplash.com/photo-1572490122747-3968b75cc699', 'Drinks', false, false, 20),
+('Onion Rings', 'Aros de cebolla crujientes con salsa especial.', 'Aros crocantes ideales para compartir.', 3490, 'https://images.unsplash.com/photo-1639024471283-03518883512d', 'Fries', false, false, 25);

@@ -65,9 +65,7 @@ function Product() {
   if(error || !product) return <p>Error al cargar el producto</p>;
   const ingredientsList =
     typeof product.ingredients === "string"
-      ? product.ingredients.split(",").map((item) => item.trim())
-      : Array.isArray(product.ingredients)
-      ? product.ingredients
+      ? product.ingredients.split(",").map(i => i.trim())
       : [];
 
   return (
@@ -147,7 +145,10 @@ function Product() {
 
         <div className="product-details">
           <h4>Descripción</h4>
-          <p>{product.description || "Sin descripción disponible."}</p>
+          <p>{product.description?.trim()
+            ? product.description
+            : "Sin descripción disponible"
+          }</p>
 
           <h4>Ingredientes</h4>
           <ul>
