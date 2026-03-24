@@ -37,7 +37,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icons.Instagram size={38} className="social-icon" style={{color:'black'}} />
+              <Icons.Instagram size={38} className="social-icon" style={{color:'withe'}} />
             </a>
 
             <a
@@ -45,7 +45,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icons.Tiktok size={38} className="social-icon" style={{color:'black'}} />
+              <Icons.Tiktok size={38} className="social-icon" style={{color:'withe'}} />
             </a>
 
             <a
@@ -53,7 +53,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icons.Facebook size={38} className="social-icon" style={{ color: 'black' }} />
+              <Icons.Facebook size={38} className="social-icon" style={{ color: 'withe' }} />
             </a>
 
           </div>
