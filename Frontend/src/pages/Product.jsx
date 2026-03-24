@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { CartContext } from "@context/CartContext";
 import { useAuth } from "@context/AuthContext";
 
-import { getProductById, updateProduct } from "@services/product.service";
+import { getProductById, updateProduct, deleteProduct } from "@services/product.service";
 
 import "@styles/product.css";
 
@@ -19,8 +19,10 @@ function Product() {
   const { addToCart } = useContext(CartContext);
 
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] =useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({});
 
   const isAdmin = user?.role === "admin";
   
@@ -35,6 +37,46 @@ function Product() {
       console.error("Error actualizando producto:", error);
       toast.error("No se pudo actualizar el producto");
     }
+  };
+
+  const handleDelete = async () => {
+    const confirm = window.confirm("¿Seguro que quieres eliminar este producto?");
+    if(!confirm) return;
+    try {
+      await deleteProduct(id);
+      toast.success("Producto eliminado");
+      navigate("/menu");
+    }catch(error){
+      console.error("Error eliminando el producto");
+      toast.error("No se pudo eliminar el producto");
+    }
+  };
+
+  const handleEdit = async () => {
+    setForm(product);
+    setEditing(true);
+  };
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSave = async () => {
+    try{
+      const updated = await updateProduct(id, form);
+      setProduct(updated);
+      setEditing(false);
+      toast.success("Producto actualizado");
+    }catch(error){
+      toast.error("Error al actualizar");
+    }
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
   };
 
   useEffect(() => {
@@ -80,7 +122,15 @@ function Product() {
       </div>
 
       <div className="product-info-section">
+        {editing ? (
+          <input
+          name="name"
+          value={form.name || ""}
+          onChange={handleChange}
+          />
+        ) : (
         <h2 className="title-font">{product.name}</h2>
+        )}
 
         {isAdmin && (
           <div
@@ -137,22 +187,46 @@ function Product() {
             </div>
           </div>
         )}
-
-        <h3 className="product-price">
-          ${Number(product.price || 0).toLocaleString("es-CL")}
-        </h3>
+        {editing ? (
+          <input
+          name="price"
+          value={form.price || ""}
+          onChange={handleChange}
+          />
+        ) : (
+          <h3 className="product-price">
+            ${Number(product.price || 0).toLocaleString("es-CL")}
+          </h3>
+        )}
 
         <hr />
 
         <div className="product-details">
           <h4>Descripción</h4>
-          <p>{product.description?.trim()
+          {editing ? (
+            <textarea
+            name="description"
+            value={form.description || ""}
+            onChange={handleChange}
+            />
+          ) : (
+            <p>
+              {product.description?.trim()
             ? product.description
             : "Sin descripción disponible"
-          }</p>
+          }
+            </p>
+          )}
 
           <h4>Ingredientes</h4>
-          <ul>
+          {editing ? (
+            <textarea
+            name="ingredients"
+            value={form.ingredients || ""}
+            onChange={handleChange}
+            />
+          ) : (
+            <ul>
             {ingredientsList.length > 0 ? (
             ingredientsList.map((item, index) => (
               <li key={index}>{item}</li>
@@ -161,6 +235,7 @@ function Product() {
               <li>Sin ingredientes disponibles</li>
             )}
           </ul>
+          )}
         </div>
 
         <div className="product-buttons">
@@ -177,6 +252,85 @@ function Product() {
             <Icons.Cart size={18} style={{ marginRight: "10px" }} />
             {product.stock > 0 ? "Agregar al pedido" : "Agotado"}
           </button>
+
+          {isAdmin && (
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                marginTop: "15px",
+                justifyContent: "flex-end"
+              }}
+              >
+                {!editing ? (
+                  <>
+                    <button
+                      onClick={handleEdit}
+                      title="Editar"
+                      style={{
+                        background: "#ffc107",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "5px 8px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px"
+                      }}
+                    >
+                      <Icons.Edit size={18}>Editar</Icons.Edit>
+                    </button>
+
+                    <button
+                      onClick={handleDelete}
+                      title="Eliminar"
+                      style={{
+                        background: "#dc3545",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "5px 8px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px"
+                      }}
+                    >
+                      <Icons.Delete size={18}>Eliminar</Icons.Delete>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                    onClick={handleSave}
+                    style={{
+                      background: "#198754",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "8px 12px",
+                      cursor: "pointer"
+                    }}
+                    >
+                      <Icons.Save size={18}>Guardar</Icons.Save>
+                    </button>
+                    <button
+                    onClick={handleCancel}
+                    style={{
+                      background: "#6c757d",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "8px 12px",
+                      cursor: "pointer"
+                    }}
+                    >
+                      <Icons.Cancel size={18}>Cancelar</Icons.Cancel>
+                    </button>
+                  </>
+                )}
+              </div>
+          )}
+
         </div>
       </div>
     </div>

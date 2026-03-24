@@ -18,7 +18,16 @@ import Footer from "@components/Footer.jsx";
 function App() {
   return (
     <>
-    <Toaster position="top-right"/>
+    <Toaster
+    toastOptions={{
+      success: {
+        duration: 6000,
+      },
+      error: {
+        duration: 5000
+      },
+    }}
+    position="top-right"/>
       <Header />
 
       <Routes>

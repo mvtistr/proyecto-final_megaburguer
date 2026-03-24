@@ -1,9 +1,8 @@
 import { BsBackpack4Fill, BsFillSkipBackwardCircleFill } from "react-icons/bs";
-import { FaUser, FaHamburger } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
+import { FaUser, FaHamburger, FaPencilAlt, FaSave } from "react-icons/fa";
+import { MdAdminPanelSettings, MdDelete, MdCancel } from "react-icons/md";
 import { IoReceiptSharp, IoLogOut } from "react-icons/io5";
 import { BiRightArrowCircle, BiLeftArrowCircle, BiLogoInstagram, BiLogoTiktok, BiLogoFacebook  } from "react-icons/bi";
-import { FaHamburguer } from "react-icons/fa";
 
 export const Icons = {
   Cart: BsBackpack4Fill,
@@ -18,5 +17,9 @@ export const Icons = {
   Tiktok: BiLogoTiktok,
   Facebook: BiLogoFacebook,
   Back: BsFillSkipBackwardCircleFill,
-  Burguer: FaHamburger
+  Burguer: FaHamburger,
+  Edit: FaPencilAlt,
+  Delete: MdDelete,
+  Save: FaSave,
+  Cancel: MdCancel
 };
