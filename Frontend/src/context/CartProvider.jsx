@@ -62,7 +62,7 @@ function CartProvider({ children }) {
   };
 
   const clearCart = () => {
-    const confirmClear = BsWindowSidebar.confirm("¿Vaciar pedido completo?");
+    const confirmClear = window.confirm("¿Vaciar pedido completo?");
     if(!confirmClear) return;
     setCart([]);
     toast.success("🧹 Pedido vaciado");
