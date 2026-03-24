@@ -39,6 +39,20 @@ function Product() {
     }
   };
 
+  const handleToggleStock = async () => {
+  if (!product) return;
+  try {
+    
+    const nuevoStock = product.stock > 0 ? 0 : 10; 
+    const updatedProduct = { ...product, stock: nuevoStock };
+    
+    setProduct(updatedProduct);
+    await updateProduct(id, updatedProduct);
+    toast.success(nuevoStock === 0 ? "Producto agotado" : "Stock restaurado");
+  } catch (error) {
+    toast.error("Error al actualizar stock");
+  }
+};
   const handleDelete = async () => {
     const confirm = window.confirm("¿Seguro que quieres eliminar este producto?");
     if(!confirm) return;
@@ -184,6 +198,21 @@ function Product() {
                 />
                 Destacado
               </label>
+              <label
+    style={{
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: "5px",
+    }}
+  >
+    <input
+      type="checkbox"
+      checked={product.stock <= 0} 
+      onChange={handleToggleStock}
+    />
+    Marcar como Agotado
+  </label>
             </div>
           </div>
         )}

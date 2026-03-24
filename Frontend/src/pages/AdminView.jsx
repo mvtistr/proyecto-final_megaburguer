@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { deleteProduct, updateProduct } from "@services/product.service";
 
 import API from "@services/api.js";
 
@@ -67,7 +68,7 @@ const changeStatus = async (order) => {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User</th>
+                        <th>Email usuario</th>
                         <th>Total</th>
                         <th>Estado</th>
                     </tr>
@@ -76,7 +77,7 @@ const changeStatus = async (order) => {
                 <tbody>
                     {orders.map((order) => (
                         <tr key={order.id}>
-                            <td>{order.id}</td>
+                            <td>{order.email}</td>
                             <td>{order.user_id}</td>
                             <td>${order.total_price}</td>
                             <td>{order.status}</td>

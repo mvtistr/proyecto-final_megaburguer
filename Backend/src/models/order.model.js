@@ -1,7 +1,12 @@
 const pool = require('../../db/db.js');
 
 const getOrders = async () => {
-    const result = await pool.query('SELECT * FROM orders ORDER BY id DESC');
+    const result = await pool.query(`
+        SELECT o.*, u.email 
+        FROM orders o 
+        JOIN users u ON o.user_id = u.id 
+        ORDER BY o.id DESC
+    `);
     return result.rows;
 };
 
