@@ -43,7 +43,7 @@ function Header() {
                     </Link>
 
                     <Link to="/menu">
-                        <Icons.Menu size={50} className="icons" />
+                        <Icons.Burguer size={50} className="icons" />
                     </Link>
                 </div>
 

@@ -51,7 +51,7 @@ function Cart() {
       toast.error("Error al procesar pedido");
     } finally {
       toast.dismiss(toastId);
-      navigate("/profile");
+      navigate("/");
     }
   };
 
