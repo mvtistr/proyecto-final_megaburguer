@@ -36,7 +36,12 @@ function Product() {
       await updateProduct(id, updatedProduct);
     } catch (error) {
       console.error("Error actualizando producto:", error);
-      toast.error("No se pudo actualizar el producto");
+      setProduct(product);
+      if(error.response?.data?.error){
+        toast.error(error.response.data.error);
+      }else{
+        toast.error("No se pudo actualizar el producto");
+      }
     }
   };
 

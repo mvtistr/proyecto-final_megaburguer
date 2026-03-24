@@ -9,61 +9,96 @@ function AdminView() {
     const [orders, setOrders] = useState([]);
     const [details, setDetails] = useState([]);
     const [viewingId, setViewingId] = useState(null);
+    const [filter, setFilter] = useState("todos");
 
-    useEffect(()=> {
-        const fetchOrders =  async() =>{
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const res = await API.get('/orders', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                setOrders(res.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchOrders();
+    }, []);
+
+    const viewDetails = async (orderId) => {
         try {
-            const token = localStorage.getItem("token");
-            const res = await API.get('/orders', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            setOrders(res.data);
+            const res = await API.get(`/orders/${orderId}/details`);
+            setDetails(res.data);
+            setViewingId(orderId);
         } catch (error) {
-            console.error(error);
+            console.error("Error loading order details:", error);
         }
     };
-    fetchOrders();
-}, []);
 
-const viewDetails = async (orderId) => {
-    try {
-        const res = await API.get(`/orders/${orderId}/details`);
-        setDetails(res.data);
-        setViewingId(orderId);
-    } catch (error) {
-        console.error("Error loading order details:", error);
-    }
-};
+    const changeStatus = async (order) => {
+        try {
+            const newStatus =
+                order.status === "en pedido"
+                    ? "en preparacion"
+                    : order.status === "en preparacion"
+                        ? "listo"
+                        : "entregado";
+            await API.put(`/orders/${order.id}`, {
+                ...order,
+                status: newStatus
+            });
+            const updatedOrders = orders.map(o =>
+                o.id === order.id ? { ...o, status: newStatus } : o
+            );
+            setOrders(updatedOrders);
+        } catch (error) {
+            console.error("Error updating order:", error);
+        }
+    };
 
-const changeStatus = async (order) => {
-    try {
-        const newStatus = 
-        order.status === "en pedido" 
-        ? "en preparacion"
-        : order.status === "en preparacion"
-        ? "listo"
-        : "entregado";
+    const deleteOrder = async (orderId) => {
+        const confirm = window.confirm("¿Seguro que quieres eliminar esta orden?");
+        if (!confirm) return;
+        try {
+            const token = localStorage.getItem("token");
+            await api.delete(`/orders/${orderId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setOrders(orders.filter(o => o.id !== orderId));
+        } catch (error) {
+            console.error("Error eliminando orden:", error);
+        }
+    };
 
-        await API.put(`/orders/${order.id}`, {
-            ...order,
-            status: newStatus
-        });
-
-        const updatedOrders = orders.map(o =>
-            o.id === order.id ? { ...o, status: newStatus } : o
-        );
-        setOrders(updatedOrders);
-    } catch (error) {
-        console.error("Error updating order:", error);
-    }
-};
+    const filteredOrders = orders.filter(order => {
+        if(filter === "todos") return true;
+        return order.status === filter;
+    });
 
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">Panel administrativo</h2>
-
+            <div className="mb-3">
+                <select
+                className="form-select w-auto"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                >
+                    <option value="todos">Todos</option>
+                    <option value="en pedido">En Pedido</option>
+                    <option value="en preparacion">En Preparacion</option>
+                    <option value="listo">Listo</option>
+                    <option value="entregado">Entregado</option>
+                </select>
+            </div>
+            <p className="mb-2">
+                {filteredOrders.length} pedidos encontrados
+            </p>
             <table className="table table-striped shadow">
                 <thead>
                     <tr>
@@ -75,16 +110,17 @@ const changeStatus = async (order) => {
                 </thead>
 
                 <tbody>
-                    {orders.map((order) => (
+                    {filteredOrders.map((order) => (
                         <tr key={order.id}>
                             <td>{order.email}</td>
                             <td>{order.user_id}</td>
                             <td>${order.total_price}</td>
                             <td>{order.status}</td>
-                            <td> 
+                            <td>
                                 <button className="btn btn-info btn-sm" onClick={() => viewDetails(order.id)}>Detalles</button>
                                 <button className="btn btn-success btn-sm ms-2" onClick={() => changeStatus(order)} disabled={order.status === "entregado"}>Siguiente Estado</button>
-                                
+                                <button className="btn btn-danger btn-sm ms-2" onClick={() => deleteOrder(order.id)}>Eliminar</button>
+
                             </td>
                         </tr>
                     ))}
