@@ -49,7 +49,9 @@ function Register() {
       toast.success("Registro exitoso 🍔");
       navigate("/login");
     } catch (error) {
-      toast.error(error.message || "Error al registrarse");
+      const message =
+        error.response?.data?.error || "Error al registrarse";
+      toast.error(message);
       console.error("Error al registrarse:", error);
     } finally {
       toast.dismiss(toastId);
