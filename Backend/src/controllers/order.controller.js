@@ -32,11 +32,16 @@ const updateOrder = async (req, res) => {
 
 const deleteOrder = async (req, res) => {
     try {
-        const deleted = await orderModel.deleteOrder(req.params.id);
+        if(req.user.role !== "admin"){
+            return res.status(403).json({error: "No autorizado"});
+        }
+        const {id} = req.params; 
+        const deleted = await orderModel.deleteOrder(id);
         if (!deleted) {
             return res.status(404).json({ error: 'Orden no encontrada' });
         }
         res.json(deleted);
+        
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

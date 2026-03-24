@@ -22,8 +22,8 @@ const createOrder = async ({ user_id, cart, total_price }) => {
 
     const orderResult = await client.query(
       `INSERT INTO orders (user_id, total_price)
-       VALUES ($1, $2)
-       RETURNING *`,
+      VALUES ($1, $2)
+      RETURNING *`,
       [user_id, total_price]
     );
 
@@ -32,7 +32,7 @@ const createOrder = async ({ user_id, cart, total_price }) => {
     for (let item of cart) {
       await client.query(
         `INSERT INTO details (order_id, product_id, quantity, price)
-         VALUES ($1, $2, $3, $4)`,
+        VALUES ($1, $2, $3, $4)`,
         [order.id, item.product_id, item.quantity, item.price]
       );
     }

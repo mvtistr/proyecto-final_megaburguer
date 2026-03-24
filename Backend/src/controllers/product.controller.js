@@ -3,7 +3,8 @@ const {
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  countFeaturedProducts
 } = require("../models/product.model");
 
 const getProductsController = async (req, res) => {
@@ -45,12 +46,19 @@ const createProductController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
-    const product = await updateProduct(req.params.id, req.body);
-
-    if (!product) {
+    const currentProduct = await getProductById(req.params.id);
+    if (!currentProduct) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
-
+    if(req.body.is_featured === true && currentProduct.is_featured === false){
+      const count = await countFeaturedProducts();
+      if(count >= 4){
+        return res.status(400).json({
+          error: "Solo puedes tener 4 productos destacados"
+        });
+      }
+    }
+    const product = await updateProduct(req.params.id, req.body);
     return res.status(200).json(product);
   } catch (error) {
     return res.status(500).json({ error: error.message });
