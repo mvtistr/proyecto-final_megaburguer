@@ -50,7 +50,14 @@ const registerController = async (req, res) => {
             user: newUser,
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+         if (error.code === '23505') {
+            return res.status(400).json({ error: "Este correo electrónico ya está registrado" });
+        }
+
+       
+        console.error("Error en registro:", error);
+        res.status(500).json({ error: "Error al procesar el registro" });
+    
     }
 };
 

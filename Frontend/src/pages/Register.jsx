@@ -20,7 +20,7 @@ function Register() {
 
   const subir = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Creando cuenta ...");
+    
     if (
       !email ||
       !nombre ||
@@ -37,7 +37,7 @@ function Register() {
       toast.error("Las contraseñas deben coincidir");
       return;
     }
-
+const toastId = toast.loading("Creando cuenta ...");
     try {
       await registerUser({
         name: nombre,

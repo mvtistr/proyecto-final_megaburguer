@@ -9,6 +9,7 @@ import Login from "@pages/Login.jsx";
 import Product from "@pages/Product.jsx";
 import Profile from "@pages/Profile.jsx";
 import Register from "@pages/Register.jsx";
+import CreateProduct from "./pages/CreateProduct";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/admin/crear" element={<CreateProduct />} />
 
         <Route
           path="/profile"
@@ -55,6 +57,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>

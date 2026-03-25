@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { CartContext } from "@context/CartContext";
 import { useAuth } from "@context/AuthContext";
 
-import { getProductById, updateProduct, deleteProduct } from "@services/product.service";
+import { getProductById, updateProduct, deleteProduct , getProducts} from "@services/product.service";
 
 import "@styles/product.css";
 import "@styles/global.css";
@@ -18,7 +18,7 @@ function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
-
+  const [offersCount, setOffersCount] = useState(0);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -29,14 +29,32 @@ function Product() {
   
   const handleToggleAdminField = async (campo) => {
     if(!product) return;
+
+    if (campo === "is_offer" && !product.is_offer) {
+    if (offersCount >= 4) {
+      toast.error("Solo puede haber un máximo de 4 productos en oferta");
+      return;
+    }
+  }
+
+   
+
+
     try {
       const nuevoValor = !product[campo];
       const updatedProduct = { ...product, [campo]: nuevoValor };
       setProduct(updatedProduct);
       await updateProduct(id, updatedProduct);
+      if (campo === "is_offer") {
+      setOffersCount(prev => nuevoValor ? prev + 1 : prev - 1);
+    }
+
+    toast.success("Ajuste actualizado");
+
     } catch (error) {
       console.error("Error actualizando producto:", error);
       setProduct(product);
+      
       if(error.response?.data?.error){
         toast.error(error.response.data.error);
       }else{
@@ -106,6 +124,12 @@ function Product() {
         const data = await getProductById(id);
         if(!data) throw new Error("Producto vacío");
         setProduct(data);
+        const allProducts = await getProducts();
+        const count = allProducts.filter(p => p.is_offer).length;
+        setOffersCount(count);
+
+
+
       } catch (error) {
         console.error("Error cargando el producto:", error);
         setError(true);
@@ -179,6 +203,7 @@ function Product() {
                   display: "flex",
                   alignItems: "center",
                   gap: "5px",
+                  opacity: (!product.is_offer && offersCount >= 4) ? 0.6 : 1 
                 }}
               >
                 <input

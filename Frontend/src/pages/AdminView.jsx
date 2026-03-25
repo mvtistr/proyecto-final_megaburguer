@@ -64,12 +64,13 @@ function AdminView() {
         if (!confirm) return;
         try {
             const token = localStorage.getItem("token");
-            await api.delete(`/orders/${orderId}`, {
+            await API.delete(`/orders/${orderId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             setOrders(orders.filter(o => o.id !== orderId));
+             alert("Orden eliminada con éxito");
         } catch (error) {
             console.error("Error eliminando orden:", error);
         }
@@ -104,6 +105,7 @@ function AdminView() {
                     <tr>
                         <th>ID</th>
                         <th>Email usuario</th>
+                        <th>Fecha</th>
                         <th>Total</th>
                         <th>Estado</th>
                     </tr>
@@ -112,8 +114,9 @@ function AdminView() {
                 <tbody>
                     {filteredOrders.map((order) => (
                         <tr key={order.id}>
+                            <td>{order.id}</td>
                             <td>{order.email}</td>
-                            <td>{order.user_id}</td>
+                            <td>{order.order_date}</td>
                             <td>${order.total_price}</td>
                             <td>{order.status}</td>
                             <td>
