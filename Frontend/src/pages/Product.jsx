@@ -38,6 +38,7 @@ function Product() {
     try {
       const nuevoValor = !product[campo];
       const updatedProduct = { ...product, [campo]: nuevoValor };
+      console.log("FRONTEND ENVIANDO: ", updatedProduct);
       setProduct(updatedProduct);
       await updateProduct(id, updatedProduct);
       if (campo === "is_offer") {

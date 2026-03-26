@@ -33,6 +33,7 @@ const createProduct = async (product) => {
 };
 
 const updateProduct = async (id, product) => {
+    console.log("MODEL DATA:", product);
     const fields = [];
     const values = [];
     let index = 1;

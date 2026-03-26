@@ -43,6 +43,7 @@ const createProductController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
+    console.log("BACKEND RECIBE:", req.body);
     const currentProduct = await getProductById(req.params.id);
     if (!currentProduct) {
       return res.status(404).json({ error: "Producto no encontrado" });
