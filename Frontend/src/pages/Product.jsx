@@ -147,7 +147,14 @@ function Product() {
     addToCart(product);
   };
 
-  if (loading) return <p>Cargando producto...</p>;
+  if (loading){
+    return (
+      <div style={{ textAlign: "center", padding: "40px"}}>
+        <div className="spinner-border text-warning" role="status" />
+        <p>Cargando producto...</p>
+      </div>
+    );
+  }
   if(error || !product) return <p>Error al cargar el producto</p>;
   console.log("PRODUCT:", product);
   console.log("INGREDIENTS RAW:", product.ingredients);

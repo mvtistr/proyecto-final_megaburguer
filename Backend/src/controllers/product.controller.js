@@ -15,7 +15,6 @@ const getProductsController = async (req, res) => {
     if (process.env.NODE_ENV === "test") {
       return res.status(200).json([]);
     }
-
     console.error("Error en GET /api/products:", error);
     return res.status(500).json({ error: error.message });
   }
@@ -24,11 +23,9 @@ const getProductsController = async (req, res) => {
 const getProductByIdController = async (req, res) => {
   try {
     const product = await getProductById(req.params.id);
-
     if (!product) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
-
     return res.status(200).json(product);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -68,11 +65,9 @@ const updateProductController = async (req, res) => {
 const deleteProductController = async (req, res) => {
   try {
     const product = await deleteProduct(req.params.id);
-
     if (!product) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
-
     return res.status(200).json({ message: "Producto eliminado", product });
   } catch (error) {
     return res.status(500).json({ error: error.message });

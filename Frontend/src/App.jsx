@@ -20,7 +20,11 @@ function App() {
   return (
     <>
     <Toaster
+    position="top-right"
     toastOptions={{
+      style: {
+        fontSize: "14px",
+      },
       success: {
         duration: 6000,
       },
@@ -28,7 +32,7 @@ function App() {
         duration: 5000
       },
     }}
-    position="top-right"/>
+    />
       <Header />
 
       <Routes>

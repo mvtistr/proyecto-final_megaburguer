@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { deleteProduct, updateProduct } from "@services/product.service";
 
-import API from "@services/api.js";
+import api from "@services/api.js";
+
+import toast from "react-hot-toast";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -10,12 +12,13 @@ function AdminView() {
     const [details, setDetails] = useState([]);
     const [viewingId, setViewingId] = useState(null);
     const [filter, setFilter] = useState("todos");
+    const [loadingId, setLoadingId] = useState(null);
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await API.get('/orders', {
+                const res = await api.get('/orders', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -30,7 +33,7 @@ function AdminView() {
 
     const viewDetails = async (orderId) => {
         try {
-            const res = await API.get(`/orders/${orderId}/details`);
+            const res = await api.get(`/orders/${orderId}/details`);
             setDetails(res.data);
             setViewingId(orderId);
         } catch (error) {
@@ -40,13 +43,14 @@ function AdminView() {
 
     const changeStatus = async (order) => {
         try {
+            setLoadingId(order.id);
             const newStatus =
                 order.status === "en pedido"
                     ? "en preparacion"
                     : order.status === "en preparacion"
                         ? "listo"
                         : "entregado";
-            await API.put(`/orders/${order.id}`, {
+            await api.put(`/orders/${order.id}`, {
                 ...order,
                 status: newStatus
             });
@@ -54,30 +58,57 @@ function AdminView() {
                 o.id === order.id ? { ...o, status: newStatus } : o
             );
             setOrders(updatedOrders);
+            toast.success("Estado actualizado");
         } catch (error) {
             console.error("Error updating order:", error);
+            toast.error("Error al actualizar estado");
+        } finally {
+            setLoadingId(null);
         }
     };
 
     const deleteOrder = async (orderId) => {
-        const confirm = window.confirm("¿Seguro que quieres eliminar esta orden?");
-        if (!confirm) return;
-        try {
-            const token = localStorage.getItem("token");
-            await API.delete(`/orders/${orderId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setOrders(orders.filter(o => o.id !== orderId));
-             alert("Orden eliminada con éxito");
-        } catch (error) {
-            console.error("Error eliminando orden:", error);
-        }
+        toast((t) => (
+            <div>
+                <p>¿Eliminar esta orden?</p>
+                <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                    <button
+                        className="btn btn-danger btn-sm"
+                        onClick={async () => {
+                            try {
+                                setLoadingId(orderId);
+                                const token = localStorage.getItem("token");
+                                await api.delete(`/orders/${orderId}`, {
+                                    headers: {
+                                        Authorization: `Bearer ${token}`
+                                    }
+                                });
+                                setOrders(orders.filter(o => o.id !== orderId));
+                                toast.success("Orden eliminada");
+                            } catch (error) {
+                                console.error(error);
+                                toast.error("Error al eliminar");
+                            } finally {
+                                setLoadingId(null);
+                            }
+                            toast.dismiss(t.id);
+                        }}
+                    >
+                        Sí
+                    </button>
+                    <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        ));
     };
 
     const filteredOrders = orders.filter(order => {
-        if(filter === "todos") return true;
+        if (filter === "todos") return true;
         return order.status === filter;
     });
 
@@ -86,9 +117,9 @@ function AdminView() {
             <h2 className="text-center mb-4">Panel administrativo</h2>
             <div className="mb-3">
                 <select
-                className="form-select w-auto"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+                    className="form-select w-auto"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
                 >
                     <option value="todos">Todos</option>
                     <option value="en pedido">En Pedido</option>
@@ -108,25 +139,53 @@ function AdminView() {
                         <th>Fecha</th>
                         <th>Total</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {filteredOrders.map((order) => (
-                        <tr key={order.id}>
-                            <td>{order.id}</td>
-                            <td>{order.email}</td>
-                            <td>{order.order_date}</td>
-                            <td>${order.total_price}</td>
-                            <td>{order.status}</td>
-                            <td>
-                                <button className="btn btn-info btn-sm" onClick={() => viewDetails(order.id)}>Detalles</button>
-                                <button className="btn btn-success btn-sm ms-2" onClick={() => changeStatus(order)} disabled={order.status === "entregado"}>Siguiente Estado</button>
-                                <button className="btn btn-danger btn-sm ms-2" onClick={() => deleteOrder(order.id)}>Eliminar</button>
-
+                    {filteredOrders.length === 0 ? (
+                        <tr>
+                            <td colSpan="6" className="text-center py-4">
+                                No hay pedidos para este filtro 🍔
                             </td>
                         </tr>
-                    ))}
+                    ) : (
+                        filteredOrders.map((order) => (
+                            <tr key={order.id}>
+                                <td>{order.id}</td>
+                                <td>{order.email}</td>
+                                <td>{order.order_date}</td>
+                                <td>${order.total_price}</td>
+                                <td>{order.status}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-info btn-sm"
+                                        onClick={() => viewDetails(order.id)}
+                                    >
+                                        Detalles
+                                    </button>
+
+                                    <button
+                                        className="btn btn-success btn-sm ms-2"
+                                        onClick={() => changeStatus(order)}
+                                        disabled={order.status === "entregado" || loadingId === order.id}
+                                    >
+                                        {loadingId === order.id ? "Actualizando..." : "Siguiente Estado"}
+                                    </button>
+
+                                    <button
+                                        className="btn btn-danger btn-sm ms-2"
+                                        onClick={() => deleteOrder(order.id)}
+                                        disabled={loadingId === order.id}
+                                    >
+                                        {loadingId === order.id ? "Eliminando..." : "Eliminar"}
+                                    </button>
+
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
 

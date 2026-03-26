@@ -13,6 +13,7 @@ const getProductById = async (id) => {
 const createProduct = async (product) => {
     const {
         name,
+        description,
         ingredients,
         price,
         image_url,
@@ -23,10 +24,10 @@ const createProduct = async (product) => {
     } = product;
     const res = await pool.query(
         `INSERT INTO products
-        (name, ingredients, price, image_url, category, is_featured, is_offer, stock)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        (name, description, ingredients, price, image_url, category, is_featured, is_offer, stock)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *`,
-        [name, ingredients, price, image_url, category, is_featured, is_offer, stock]
+        [name, description, ingredients, price, image_url, category, is_featured, is_offer, stock]
     );
     return res.rows[0];
 };
@@ -34,6 +35,7 @@ const createProduct = async (product) => {
 const updateProduct = async (id, product) => {
     const {
         name,
+        description,
         ingredients,
         price,
         image_url,
@@ -44,10 +46,10 @@ const updateProduct = async (id, product) => {
     } = product;
     const res = await pool.query(
         `UPDATE products SET
-        name = $1, ingredients = $2, price = $3, image_url = $4,
-        category = $5, is_featured = $6, is_offer = $7, stock = $8
-        WHERE id = $9 RETURNING *`,
-        [name, ingredients, price, image_url, category, is_featured, is_offer, stock, id]
+        name = $1, description = $2, ingredients = $3, price = $4, image_url = $5,
+        category = $6, is_featured = $7, is_offer = $8, stock = $9
+        WHERE id = $10 RETURNING *`,
+        [name, description, ingredients, price, image_url, category, is_featured, is_offer, stock, id]
     );
     return res.rows[0];
 };
