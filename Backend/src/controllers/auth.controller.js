@@ -17,9 +17,16 @@ const loginController = async (req, res) => {
         }
         const user = await loginModule(email, password);
         if (!user) {
-            return res.status(401).json({ error: "Credenciales invalidas" });
+            return res.status(401).json({ error: "Email o contraseña incorrectos" });
         }
-        const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "2h" });
+        const token = jwt.sign(
+            { id: user.id, role: user.role },
+            process.env.JWT_SECRET,
+            { 
+                expiresIn: "2h",
+                issuer: 'megaburguer'
+            }
+        );
         res.status(200).json({
             message: "Login exitoso",
             token,
@@ -50,14 +57,11 @@ const registerController = async (req, res) => {
             user: newUser,
         });
     } catch (error) {
-         if (error.code === '23505') {
-            return res.status(400).json({ error: "Este correo electrónico ya está registrado" });
+        if (error.code === 'USER_EXISTS') {
+            return res.status(409).json({ error: error.message });
         }
-
-       
         console.error("Error en registro:", error);
-        res.status(500).json({ error: "Error al procesar el registro" });
-    
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 };
 

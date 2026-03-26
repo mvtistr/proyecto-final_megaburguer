@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const verifyToken = require("../middleware/auth.middleware");
+const verifyToken = require("../middleware/auth.middleware.js");
+const isAdmin = require("../middleware/admin.middleware.js");
 
 const {
   getProductsController,
@@ -13,8 +14,9 @@ const {
 
 router.get("/", getProductsController);
 router.get("/:id", getProductByIdController);
-router.post("/", verifyToken, createProductController);
-router.put("/:id", verifyToken, updateProductController);
-router.delete("/:id", verifyToken, deleteProductController);
+router.post("/", verifyToken, isAdmin, createProductController);
+
+router.put("/:id", verifyToken, isAdmin, updateProductController);
+router.delete("/:id", verifyToken, isAdmin, deleteProductController);
 
 module.exports = router;

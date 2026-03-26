@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs')
 const registerModule = async (name, email, password, direction, role = 'user') => {
     const existing = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) {
-        throw new Error('El email ya está registrado');
+        const error = new Error("El email ya está registrado");
+        error.code = "USER_EXISTS";
+        throw error;
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const res = await pool.query(

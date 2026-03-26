@@ -1,5 +1,5 @@
 import api from "./api.js";
-import { errors, handleError } from "./errors.js";
+import { errors, handleError } from "../utils/errors.js";
 
 import toast from "react-hot-toast";
 
