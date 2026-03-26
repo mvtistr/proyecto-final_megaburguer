@@ -27,35 +27,45 @@ function Product() {
 
   const isAdmin = user?.role === "admin";
   
-  const handleToggleAdminField = async (campo) => {
+  const handleToggleOffer = async () => {
     if(!product) return;
-    if (campo === "is_offer" && !product.is_offer) {
-    if (offersCount >= 4) {
+    if(!product.is_offer && offersCount >= 4){
       toast.error("Solo puede haber un máximo de 4 productos en oferta");
       return;
     }
-  }
     try {
-      const nuevoValor = !product[campo];
-      const updatedProduct = { ...product, [campo]: nuevoValor };
+      const updatedProduct = { ...product, is_offer: !product.is_offer };
       console.log("FRONTEND ORIGINAL: ", updatedProduct);
       const { id: _, created_at, ...cleanProduct } = updatedProduct;
       console.log("ENVIANDO LIMPIO:", cleanProduct);
       setProduct(updatedProduct);
       await updateProduct(id, cleanProduct);
-      if (campo === "is_offer") {
-        setOffersCount(prev => nuevoValor ? prev + 1 : prev - 1);
-      }
-      toast.success("Ajuste actualizado");
+      setOffersCount(prev =>
+        updatedProduct.is_offer ? prev + 1 : prev - 1
+      );
+      toast.success("Oferta actualizada");
     } catch (error) {
       console.error("Error actualizando producto:", error);
       console.log("BACKEND DICE:", error.response?.data);
-      setProduct(product);
       if(error.response?.data?.error){
         toast.error(error.response.data.error);
       }else{
         toast.error("No se pudo actualizar el producto");
       }
+    }
+  };
+
+  const handleToggleFeatured = async () => {
+    if(!product) return;
+    try {
+      const updatedProduct = { ...product, is_featured: !product.is_featured };
+      const { id: _, created_at, ...cleanProduct } = updatedProduct;
+      setProduct(updatedProduct);
+      await updatedProduct(id, cleanProduct);
+      toast.success("Destacado actualizado");
+    }catch(error){
+      console.error(error);
+      toast.error("Error al actualizar destacado");
     }
   };
 
@@ -212,7 +222,7 @@ function Product() {
                 <input
                   type="checkbox"
                   checked={!!product.is_offer}
-                  onChange={() => handleToggleAdminField("is_offer")}
+                  onChange={() => handleToggleOffer}
                 />
                 Oferta
               </label>
@@ -228,7 +238,7 @@ function Product() {
                 <input
                   type="checkbox"
                   checked={!!product.is_featured}
-                  onChange={() => handleToggleAdminField("is_featured")}
+                  onChange={() => handleToggleFeatured}
                 />
                 Destacado
               </label>
