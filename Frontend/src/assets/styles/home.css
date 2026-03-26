@@ -15,6 +15,7 @@
   width: 100%; height: 100%;
   background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
   border-radius: 15px;
+  pointer-events: none;
   
 }
 
@@ -28,8 +29,10 @@
 
 .hero-content {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
+  z-index: 5;
+  width: 80%;
   transform: translate(-50%, -50%);
   color: white;
 }
@@ -50,23 +53,22 @@
 
 /* ===== FLECHAS ===== */
 .arrow {
-  /* position: absolute;
+  position: absolute;
   top: 50%;
   transform: translateY(-50%);
   border: none;
   color: var(--secondary);
   cursor: pointer;
   border-radius: 50%;
-  background-color: white; */
-
-   z-index: 10;
+  background-color: white;
+  z-index: 10;
   width: 50px;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  opacity: 0.7;
+  opacity: 0;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
@@ -119,4 +121,18 @@
   background: #f2f2f2;
   border-radius: 8px;
   margin-bottom: 10px;
+}
+
+.title-font {
+  font-size: 2rem; 
+  font-weight: 800;
+  text-transform: uppercase; 
+  text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5), 
+               0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content h2 {
+  font-weight: 800;
+  color: #ffffff;
+
 }
