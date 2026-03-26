@@ -236,11 +236,15 @@ function Product() {
                   alignItems: "center",
                   gap: "5px",
                 }}
-              >
+                >
                 <input
                   type="checkbox"
                   checked={!!product.is_featured}
-                  onChange={() => handleToggleFeatured}
+                  onClick={() => console.log("CLICK DETECTADO")}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    handleToggleFeatured();
+                  }}
                 />
                 Destacado
               </label>
