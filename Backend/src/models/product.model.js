@@ -33,24 +33,21 @@ const createProduct = async (product) => {
 };
 
 const updateProduct = async (id, product) => {
-    const {
-        name,
-        description,
-        ingredients,
-        price,
-        image_url,
-        category,
-        is_featured,
-        is_offer,
-        stock
-    } = product;
-    const res = await pool.query(
-        `UPDATE products SET
-        name = $1, description = $2, ingredients = $3, price = $4, image_url = $5,
-        category = $6, is_featured = $7, is_offer = $8, stock = $9
-        WHERE id = $10 RETURNING *`,
-        [name, description, ingredients, price, image_url, category, is_featured, is_offer, stock, id]
-    );
+    const fields = [];
+    const values = [];
+    let index = 1;
+    for(let key in product){
+        fields.push(`${key} = $${index}`);
+        values.push(product[key]);
+        index++;
+    }
+    values.push(id);
+    const query = `
+    UPDATE products SET ${fields.join(", ")}
+    WHERE id = $${index}
+    RETURNING *
+    `;
+    const res = await pool.query(query, values);
     return res.rows[0];
 };
 

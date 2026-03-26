@@ -29,32 +29,24 @@ function Product() {
   
   const handleToggleAdminField = async (campo) => {
     if(!product) return;
-
     if (campo === "is_offer" && !product.is_offer) {
     if (offersCount >= 4) {
       toast.error("Solo puede haber un máximo de 4 productos en oferta");
       return;
     }
   }
-
-   
-
-
     try {
       const nuevoValor = !product[campo];
       const updatedProduct = { ...product, [campo]: nuevoValor };
       setProduct(updatedProduct);
       await updateProduct(id, updatedProduct);
       if (campo === "is_offer") {
-      setOffersCount(prev => nuevoValor ? prev + 1 : prev - 1);
-    }
-
-    toast.success("Ajuste actualizado");
-
+        setOffersCount(prev => nuevoValor ? prev + 1 : prev - 1);
+      }
+      toast.success("Ajuste actualizado");
     } catch (error) {
       console.error("Error actualizando producto:", error);
       setProduct(product);
-      
       if(error.response?.data?.error){
         toast.error(error.response.data.error);
       }else{
