@@ -38,10 +38,11 @@ function Product() {
     try {
       const nuevoValor = !product[campo];
       const updatedProduct = { ...product, [campo]: nuevoValor };
-      console.log("FRONTEND ENVIANDO: ", updatedProduct);
-      console.log("ENVIANDO:", JSON.stringify(updateProduct, null, 2));
+      console.log("FRONTEND ORIGINAL: ", updatedProduct);
+      const { id: _, created_at, ...cleanProduct } = updatedProduct;
+      console.log("ENVIANDO LIMPIO:", cleanProduct);
       setProduct(updatedProduct);
-      await updateProduct(id, updatedProduct);
+      await updateProduct(id, cleanProduct);
       if (campo === "is_offer") {
         setOffersCount(prev => nuevoValor ? prev + 1 : prev - 1);
       }

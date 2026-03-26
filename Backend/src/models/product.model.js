@@ -34,20 +34,35 @@ const createProduct = async (product) => {
 
 const updateProduct = async (id, product) => {
     console.log("MODEL DATA:", product);
+    const allowedFields = [
+        "name",
+        "ingredients",
+        "description",
+        "price",
+        "image_url",
+        "category",
+        "is_featured",
+        "is_offer",
+        "stock"
+    ];
     const fields = [];
     const values = [];
     let index = 1;
-    for(let key in product){
-        fields.push(`${key} = $${index}`);
-        values.push(product[key]);
-        index++;
+    for(let key of allowedFields){
+        if(product[key] !== undefined){
+            fields.push(`${key} = $${index}`);
+            values.push(product[key]);
+            index++;
+        }
     }
     values.push(id);
     const query = `
-    UPDATE products SET ${fields.join(", ")}
-    WHERE id = $${index}
-    RETURNING *
+        UPDATE products SET ${fields.join(", ")}
+        WHERE id = $${index}
+        RETURNING *
     `;
+    console.log("QUERY:", query);
+    console.log("VALUES:", values);
     const res = await pool.query(query, values);
     return res.rows[0];
 };
