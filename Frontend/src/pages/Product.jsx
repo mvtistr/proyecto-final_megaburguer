@@ -48,6 +48,7 @@ function Product() {
       toast.success("Ajuste actualizado");
     } catch (error) {
       console.error("Error actualizando producto:", error);
+      console.log("BACKEND DICE:", error.response?.data);
       setProduct(product);
       if(error.response?.data?.error){
         toast.error(error.response.data.error);
