@@ -79,9 +79,9 @@ const deleteProduct = async (id) => {
     return res.rows[0];
 };
 
-const countFeaturedProducts = async () => {
+const countOfferProducts = async () => {
     const res = await pool.query(
-        'SELECT COUNT(*) FROM products WHERE is_featured = true'
+        'SELECT COUNT(*) FROM products WHERE is_offer = true'
     );
     return parseInt(res.rows[0].count);
 };
@@ -92,5 +92,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
-    countFeaturedProducts
+    countOfferProducts
 };

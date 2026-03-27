@@ -4,7 +4,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
-  countFeaturedProducts
+  countOfferProducts
 } = require("../models/product.model");
 
 const getProductsController = async (req, res) => {
@@ -48,11 +48,11 @@ const updateProductController = async (req, res) => {
     if (!currentProduct) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
-    if(req.body.is_featured === true && currentProduct.is_featured === false){
-      const count = await countFeaturedProducts();
+    if(req.body.is_offer === true && currentProduct.is_offer === false){
+      const count = await countOfferProducts();
       if(count >= 4){
         return res.status(400).json({
-          error: "Solo puedes tener 4 productos destacados"
+          error: "Solo puedes tener 4 productos en oferta"
         });
       }
     }
