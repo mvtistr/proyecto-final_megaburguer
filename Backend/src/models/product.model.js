@@ -60,7 +60,8 @@ const updateProduct = async (id, product) => {
     }
     values.push(id);
     const query = `
-        UPDATE products SET ${fields.join(", ")}
+        UPDATE products
+        SET ${fields.join(", ")}
         WHERE id = $${index}
         RETURNING *
     `;
