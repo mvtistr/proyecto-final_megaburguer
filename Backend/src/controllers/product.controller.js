@@ -44,6 +44,7 @@ const createProductController = async (req, res) => {
 const updateProductController = async (req, res) => {
   try {
     console.log("BODY BACKEND:", req.body);
+    console.log("ID:", req.params.id);
     const currentProduct = await getProductById(req.params.id);
     if (!currentProduct) {
       return res.status(404).json({ error: "Producto no encontrado" });

@@ -45,8 +45,9 @@ function Product() {
       );
       toast.success("Oferta actualizada");
     } catch (error) {
-      console.error("Error actualizando producto:", error);
-      console.log("BACKEND DICE:", error.response?.data);
+      console.error("ERROR FRONT:", error);
+      console.error("RAW ERROR:", error.response);
+      console.log("DATA:", error.response?.data);
       if(error.response?.data?.error){
         toast.error(error.response.data.error);
       }else{
@@ -61,9 +62,9 @@ function Product() {
     try {
       const updatedProduct = { ...product, is_featured: !product.is_featured };
       console.log("UPDATED:", updatedProduct);
-      const { id: _, created_at, ...cleanProduct } = updatedProduct;
+      const { id, created_at, ...cleanProduct } = updatedProduct;
       setProduct(updatedProduct);
-      console.log("TIPO:", typeof updateProduct);
+      console.log("TIPO:", typeof cleanProduct.is_featured);
       await updatedProduct(id, cleanProduct);
       toast.success("Destacado actualizado");
     }catch(error){
