@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 import { CartContext } from "@context/CartContext";
 import { useAuth } from "@context/AuthContext";
