@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { CartContext } from "@context/CartContext";
 import { useAuth } from "@context/AuthContext";
 
-import { getProductById, updateProduct, deleteProduct , getProducts} from "@services/product.service";
+import { getProductById, updateProduct, deleteProduct , getProducts} from "@services/product.service.js";
 
 import "@styles/product.css";
 import "@styles/global.css";
@@ -63,6 +63,7 @@ function Product() {
       console.log("UPDATED:", updatedProduct);
       const { id: _, created_at, ...cleanProduct } = updatedProduct;
       setProduct(updatedProduct);
+      console.log("TIPO:", typeof updateProduct);
       await updatedProduct(id, cleanProduct);
       toast.success("Destacado actualizado");
     }catch(error){

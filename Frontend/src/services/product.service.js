@@ -64,11 +64,3 @@ export const updateProduct = async (id, data) => {
         throw error;
     }
 };
-
-export const productService = {
-    getProducts,
-    getProductById,
-    createProduct,
-    deleteProduct,
-    updateProduct,
-};
