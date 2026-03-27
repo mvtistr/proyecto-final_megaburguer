@@ -242,13 +242,15 @@ function Product() {
                   type="checkbox"
                   checked={!!product.is_featured}
                   onClick={() => console.log("CLICK DETECTADO")}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    handleToggleFeatured();
-                  }}
+                  // onChange={(e) => {
+                  //   e.stopPropagation();
+                  //   handleToggleFeatured();
+                  // }}
+                  onChange={handleToggleFeatured}
                 />
                 Destacado
               </label>
+
               <label
     style={{
       cursor: "pointer",
