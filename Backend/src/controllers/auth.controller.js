@@ -1,106 +1,135 @@
-const jwt = require("jsonwebtoken");
-
-const {
-    loginModule,
-    registerModule,
-    deleteUserModule,
-    updateUserModule,
-} = require("../models/auth.model.js");
+const { getUserByEmail, getUserById, createUser, updateUser, deleteUser } = require("../models/auth.model.js");
+const { validateRegister, validateLogin } = require("../validators/auth.validator.js");
+const { hashPassword, comparePassword } = require('../utils/hash.js');
+const { generateToken } = require('../utils/jwt.js');
+const { hash } = require("bcryptjs");
 
 // LOGIN
-
 const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ error: "Email y password son requeridos" });
+        const user = await getUserByEmail(email);
+        if(!user){
+            return res.status(401).json({
+                error: "Credenciales invalidas"
+            });
         }
-        const user = await loginModule(email, password);
-        if (!user) {
-            return res.status(401).json({ error: "Email o contraseña incorrectos" });
+        const isMatch = await comparePassword(password, user.password);
+        if(!isMatch){
+            return res.status(401).json({
+                error: "Credenciales invalidas"
+            });
         }
-        const token = jwt.sign(
-            { id: user.id, role: user.role },
-            process.env.JWT_SECRET,
-            { 
-                expiresIn: "2h",
-                issuer: 'megaburguer'
-            }
-        );
-        res.status(200).json({
+        const token = generateToken(user);
+        return res.status(200).json({
             message: "Login exitoso",
-            token,
-            user,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            },
+            token
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("ERROR LOGIN:", error);
+        return res.status(500).json({
+            error: "Error al iniciar sesion"
+        });
     }
 };
 
 // REGISTER
-
 const registerController = async (req, res) => {
     try {
-        const { name, email, password, direction, role } = req.body;
-        if (!name || !email || !password || !direction) {
-            return res.status(400).json({ error: "Todos los campos son requeridos" });
+        const { name, email, password, direction } = req.body;
+        const existingUser = await getUserByEmail(email);
+        if(existingUser){
+            return res.status(400).json({
+                error: "El correo ya esta registrado"
+            });
         }
-        const newUser = await registerModule(
+        const hashedPassword = await hashPassword(password);
+        const user = await createUser({
             name,
             email,
-            password,
-            direction,
-            role || "user",
-        );
-        res.status(201).json({
-            message: "Usuario registrado exitosamente",
-            user: newUser,
+            password: hashedPassword,
+            direction
         });
-    } catch (error) {
-        if (error.code === 'USER_EXISTS') {
-            return res.status(409).json({ error: error.message });
+        const token = generateToken(user);
+        return res.status(201).json({
+            message: "Usuario registrado",
+            user,
+            token
+        });
+    }catch(error){
+        console.error("ERROR REGISTER:", error);
+        return res.status(500).json({
+            error: "Error al registrar usuario"
+        });
+    }
+};
+
+const getProfile = async (req, res) => {
+    try{
+        const user = await getUserById(req.user.id);
+        if(!user){
+            return res.status(404).json({
+                error: "Usuario no encontrado"
+            });
         }
-        console.error("Error en registro:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
+        return res.status(200).json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            direction: user.direction,
+            role: user.role
+        });
+    }catch(error){
+        return res.status(500).json({
+            error: "Error obteniendo usuario"
+        });
     }
 };
 
 // UPDATE
 const updateUserController = async (req, res) => {
     try {
-        const { id } = req.params;
         const { name, password, direction } = req.body;
-        const updatedUser = await updateUserModule(id, name, password, direction);
-        if (!updatedUser) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+        let hashedPassword = null;
+        if(password){
+            hashedPassword = await hashPassword(password);
         }
-        res.json({
+        const updatedUser = await updateUser(req.user.id, {
+            name,
+            password: hashedPassword,
+            direction
+        });
+        return res.status(200).json({
             message: "Usuario actualizado exitosamente",
             user: updatedUser,
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: error.message });
+        console.error("UPDATE ERROR:", error);
+        return res.status(500).json({ error: "Error actualizando usuario" });
     }
 };
 
 // DELETE
 const deleteUserController = async (req, res) => {
     try {
-        const { id } = req.params;
-        const deleted = await deleteUserModule(id);
-        if (!deleted) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
-        }
-        res.json({ message: "Usuario eliminado" });
+        await deleteUser(req.user.id);
+        return res.json({ message: "Usuario eliminado" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("DELETE ERROR:", error);
+        return res.status(500).json({ error: "Error al eliminar usuario" });
     }
 };
 
 module.exports = {
     loginController,
     registerController,
+    getProfile,
     updateUserController,
     deleteUserController,
 };

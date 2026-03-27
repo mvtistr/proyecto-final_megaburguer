@@ -10,10 +10,12 @@ const {
   updateUserController
 } = require('../controllers/auth.controller.js');
 
-router.post('/register', registerController);
-router.post('/login', loginController);
+const { validateLogin, validateRegister, validateUpdateUser } = require('../validators/auth.validator.js');
 
-router.put('/user/:id', verifyToken, updateUserController);
+router.post('/register', validateRegister, registerController);
+router.post('/login', validateLogin, loginController);
+
+router.put('/user/:id', verifyToken, validateUpdateUser, updateUserController);
 router.delete('/user/:id', verifyToken, deleteUserController);
 
 module.exports = router;
