@@ -28,7 +28,7 @@ export const handleError = (error) => {
                 toast.error("Error del servidor");
                 throw new Error(errors.server);
             default:
-                throw new Error(error.response.data?.message || errors.api);
+                throw new Error(error.response.data?.error || errors.api);
         }
     }
     if(error.request){
