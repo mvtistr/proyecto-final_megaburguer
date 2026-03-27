@@ -16,7 +16,7 @@ function CreateProduct() {
     const [image_url, setImage_url] = useState("");
     const [is_featured, setIs_featured] = useState(false);
     const [is_offer, setIs_offer] = useState(false);
-    const [stock, setStock] = useState(false);
+    const [stock, setStock] = useState(10);
 
 
     const crear = async (e) => {
@@ -43,7 +43,7 @@ function CreateProduct() {
         setImage_url("");
         setIs_featured(false);
         setIs_offer(false);
-        setStock(false);
+        setStock(10);
         setIngredients("");
         
     } catch (error) {
@@ -148,8 +148,11 @@ function CreateProduct() {
                 className="form-check-input"
                 type="checkbox" 
                 id="stock"
-                checked={stock}
-                onChange={(e) => setStock(e.target.checked)}
+                checked={stock === 10} 
+                 onChange={(e) => {
+            
+            setStock(e.target.checked ? 10 : 0);
+        }}
                 />
                 <label className="form-check-label" htmlFor="stock">
                 Ya en Stock
