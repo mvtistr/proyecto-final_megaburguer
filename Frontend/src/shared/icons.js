@@ -1,4 +1,4 @@
-import { BsBackpack4Fill, BsFillSkipBackwardCircleFill } from "react-icons/bs";
+import { BsBackpack4Fill, BsFillSkipBackwardCircleFill, BsBagPlusFill } from "react-icons/bs";
 import { FaUser, FaHamburger, FaPencilAlt, FaSave } from "react-icons/fa";
 import { MdAdminPanelSettings, MdDelete, MdCancel } from "react-icons/md";
 import { IoReceiptSharp, IoLogOut } from "react-icons/io5";
@@ -21,5 +21,6 @@ export const Icons = {
   Edit: FaPencilAlt,
   Delete: MdDelete,
   Save: FaSave,
-  Cancel: MdCancel
+  Cancel: MdCancel,
+  Add: BsBagPlusFill
 };

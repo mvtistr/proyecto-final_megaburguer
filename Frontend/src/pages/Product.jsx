@@ -226,7 +226,7 @@ function Product() {
                 <input
                   type="checkbox"
                   checked={!!product.is_offer}
-                  onChange={() => handleToggleOffer}
+                  onChange={handleToggleOffer}
                 />
                 Oferta
               </label>

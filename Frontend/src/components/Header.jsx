@@ -30,9 +30,15 @@ function Header() {
                 <div className="icons-header">
 
                        {user?.role === "admin" && (
+                        <>
                         <Link to="/admin">
                             <Icons.Admin size={50} className="icons" />
                         </Link>
+                        <Link to="/admin/crear">
+                            <Icons.Add size={50} className="icons" />
+                        </Link>
+
+                        </>
                     )}
                     <Link to="/profile">
                         <Icons.User size={50} className="icons" />
