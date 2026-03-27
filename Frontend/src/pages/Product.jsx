@@ -65,7 +65,7 @@ function Product() {
       const { id, created_at, ...cleanProduct } = updatedProduct;
       setProduct(updatedProduct);
       console.log("TIPO:", typeof cleanProduct.is_featured);
-      await updatedProduct(id, cleanProduct);
+      await updateProduct(id, cleanProduct);
       toast.success("Destacado actualizado");
     }catch(error){
       //console.error(error);
