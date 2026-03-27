@@ -63,7 +63,7 @@ function Product() {
       console.log("UPDATED:", updatedProduct);
       const { id: _, created_at, ...cleanProduct } = updatedProduct;
       setProduct(updatedProduct);
-      //await updatedProduct(id, cleanProduct);
+      await updatedProduct(id, cleanProduct);
       toast.success("Destacado actualizado");
     }catch(error){
       console.error(error);
