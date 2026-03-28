@@ -21,6 +21,7 @@ const getFormFromUser = (userData) => ({
 function Profile() {
   const navigate = useNavigate();
   const { user, logout, setUser } = useAuth();
+  const userId = user?.id;
 
   const [editing, setEditing] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -34,6 +35,54 @@ function Profile() {
     }
     setForm(getFormFromUser(user));
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    let ignore = false;
+
+    const loadProfile = async () => {
+      try {
+        const res = await api.get("/auth/profile");
+        if (ignore) return;
+
+        const profileUser = {
+          id: res.data?.id ?? user?.id,
+          name: res.data?.name ?? user?.name ?? "",
+          email: res.data?.email ?? user?.email ?? "",
+          direction: res.data?.direction ?? user?.direction ?? "",
+          role: res.data?.role ?? user?.role
+        };
+
+        setUser((currentUser) => {
+          if (
+            currentUser?.id === profileUser.id &&
+            currentUser?.name === profileUser.name &&
+            currentUser?.email === profileUser.email &&
+            currentUser?.direction === profileUser.direction &&
+            currentUser?.role === profileUser.role
+          ) {
+            return currentUser;
+          }
+
+          return profileUser;
+        });
+
+        setForm((currentForm) => ({
+          ...getFormFromUser(profileUser),
+          newPassword: currentForm.newPassword
+        }));
+      } catch {
+        // Si falla la sincronizacion, mantenemos lo que ya hay en sesion.
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      ignore = true;
+    };
+  }, [setUser, user?.direction, user?.email, user?.id, user?.name, user?.role, userId]);
 
   const handleLogout = () => {
     logout();
