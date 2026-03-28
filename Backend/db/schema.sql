@@ -30,8 +30,8 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     direction TEXT,
-    role VARCHAR(20) DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE orders (
@@ -73,4 +73,4 @@ VALUES
 INSERT INTO users 
 (name, email, password, direction, role)
 VALUES
-('Carlos Ramirez', 'admin1@megaburguer.cl', '$2b$10$hnwN9xhE8rqWMZSDFwKeceMibyR.JVWGxm1KB.hDtgQqFVkGw6fFW', 'Av. Siempre Viva 742, Santiago', 'admin');
+('Admin Principal', 'admin1@megaburguer.cl', '$2b$10$hnwN9xhE8rqWMZSDFwKeceMibyR.JVWGxm1KB.hDtgQqFVkGw6fFW', 'Av Siempre Viva 742', 'admin');

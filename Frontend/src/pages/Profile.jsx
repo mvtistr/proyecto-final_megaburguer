@@ -21,11 +21,6 @@ const getFormFromUser = (userData) => ({
 function Profile() {
   const navigate = useNavigate();
   const { user, logout, setUser } = useAuth();
-  const userId = user?.id;
-  const userName = user?.name || "";
-  const userEmail = user?.email || "";
-  const userDirection = user?.direction || "";
-  const userRole = user?.role;
 
   const [editing, setEditing] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -39,46 +34,6 @@ function Profile() {
     }
     setForm(getFormFromUser(user));
   }, [user, navigate]);
-
-  useEffect(() => {
-    if (!userId) return;
-
-    let isMounted = true;
-
-    const syncProfile = async () => {
-      try {
-        const res = await api.get("/auth/profile");
-        const currentUser = {
-          id: res.data?.id ?? userId,
-          name: res.data?.name ?? userName,
-          email: res.data?.email ?? userEmail,
-          direction: res.data?.direction ?? userDirection,
-          role: res.data?.role ?? userRole
-        };
-
-        if (!isMounted) return;
-
-        setUser(currentUser);
-        setForm(getFormFromUser(currentUser));
-      } catch {
-        if (!isMounted) return;
-
-        setForm(getFormFromUser({
-          id: userId,
-          name: userName,
-          email: userEmail,
-          direction: userDirection,
-          role: userRole
-        }));
-      }
-    };
-
-    syncProfile();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [setUser, userDirection, userEmail, userId, userName, userRole]);
 
   const handleLogout = () => {
     logout();
