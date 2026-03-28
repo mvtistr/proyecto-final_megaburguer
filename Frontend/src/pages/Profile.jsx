@@ -11,6 +11,13 @@ import api from "../services/api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@styles/register_login.css";
 
+const getFormFromUser = (userData) => ({
+  name: userData?.name || "",
+  email: userData?.email || "",
+  direction: userData?.direction || "",
+  password: ""
+});
+
 function Profile() {
   const navigate = useNavigate();
   const { user, logout, setUser } = useAuth();
@@ -18,22 +25,14 @@ function Profile() {
   const [editing, setEditing] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    direction: ""
-  });
+  const [form, setForm] = useState(getFormFromUser());
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
-    setForm({
-      name: user.name || "",
-      email: user.email || "",
-      direction: user.direction || ""
-    });
+    setForm(getFormFromUser(user));
   }, [user, navigate]);
 
   const handleLogout = () => {
@@ -42,44 +41,45 @@ function Profile() {
   };
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEdit = () => {
+    if (!user) return;
+
+    setForm(getFormFromUser(user));
+    setEditing(true);
   };
 
   const handleSave = async () => {
+    console.log("CLICK GUARDAR");
     try {
       setSaving(true);
       const cleanData = { ...form };
-      if(!cleanData.password){
+      if (!cleanData.password) {
         delete cleanData.password;
       }
       const res = await api.put(`/user/${user.id}`, cleanData);
       const updatedUser = res.data;
-      setForm({
-        name: updatedUser.name,
-        email: updatedUser.email,
-        direction: updatedUser.direction
-      });
+      setForm(getFormFromUser(updatedUser));
       setUser(updatedUser);
       toast.success("Perfil actualizado");
       setEditing(false);
-    } catch (error) {
+    } catch {
       toast.error("Error al actualizar");
-    }finally{
+    } finally {
       setSaving(false);
     }
   };
 
   const handleCancel = () => {
     setEditing(false);
-    setForm(prev => ({
-      ...prev,
-      name: user.name || "",
-      email: user.email || "",
-      direction: user.direction || ""
-    }));
+    setForm(getFormFromUser(user));
   };
 
   const handleDelete = async () => {
@@ -96,7 +96,7 @@ function Profile() {
                 toast.success("Cuenta eliminada");
                 localStorage.removeItem("token");
                 window.location.href = "/";
-              } catch (error) {
+              } catch {
                 toast.error("Error al eliminar cuenta");
               } finally {
                 setLoadingDelete(false);
@@ -127,19 +127,23 @@ function Profile() {
           />
 
           <div className="d-md-flex justify-content-md-center m-3">
-            <button
-              className="m-3 px-4 btn"
-              style={{
-                backgroundColor: "rgb(255, 135, 50)",
-                borderColor: "rgb(255, 135, 50)",
-                color: "white",
-              }}
-              onClick={() => setEditing(prev => !prev)}
-            >
-              Editar
-            </button>
+            {!editing && (
+              <button
+                type="button"
+                className="m-3 px-4 btn"
+                style={{
+                  backgroundColor: "rgb(255, 135, 50)",
+                  borderColor: "rgb(255, 135, 50)",
+                  color: "white",
+                }}
+                onClick={handleEdit}
+              >
+                Editar
+              </button>
+            )}
 
             <button
+              type="button"
               className="m-3 px-4 btn"
               style={{
                 backgroundColor: "rgb(255, 135, 50)",
@@ -195,20 +199,21 @@ function Profile() {
                   type="password"
                   id="password"
                   name="password"
+                  value={form.password}
                   placeholder="Nueva contraseña"
                   onChange={handleChange}
                 />
                 <label>Nueva contraseña</label>
               </div>
               <div className="d-flex gap-2 m-3">
-                <button className="btn btn-success" onClick={handleSave} disabled={saving}>
+                <button type="button" className="btn btn-success" onClick={handleSave} disabled={saving}>
                   {saving ? "Guardando..." : "Guardar"}
                 </button>
-                <button className="btn btn-secondary" onClick={handleCancel}>
+                <button type="button" className="btn btn-secondary" onClick={handleCancel}>
                   Cancelar
                 </button>
-
                 <button
+                  type="button"
                   className="btn btn-danger ms-auto"
                   onClick={handleDelete}
                   disabled={loadingDelete}
