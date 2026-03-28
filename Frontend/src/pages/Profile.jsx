@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Icons } from "@shared/icons.js";
 import { useAuth } from "@context/AuthContext";
 
+import { toast } from "react-hot-toast";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@styles/register_login.css";
 
@@ -15,10 +17,25 @@ function Profile() {
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
 
+  const [editing, setEditing] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    direction: ""
+  });
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
+    }
+    if (user) {
+      setForm({
+        name: user.name || "",
+        email: user.email || "",
+        direction: user.direction || ""
+      });
     }
 
     setNombre(user.name || "");
@@ -29,6 +46,67 @@ function Profile() {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      await api.put(`/user/${user.id}`, form);
+      toast.success("Perfil actualizado");
+      setEditing(false);
+    } catch (error) {
+      toast.error("Error al actualizar");
+    }
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setForm({
+      name: user.name,
+      email: user.email,
+      direction: user.direction
+    });
+  };
+
+  const handleDelete = async () => {
+    toast((t) => (
+      <div>
+        <p>¿Eliminar tu cuenta?</p>
+        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={async () => {
+              try {
+                setLoadingDelete(true);
+                await api.delete(`/user/${user.id}`);
+                toast.success("Cuenta eliminada");
+                localStorage.removeItem("token");
+                window.location.href = "/";
+              } catch (error) {
+                toast.error("Error al eliminar cuenta");
+              }finally{
+                setLoadingDelete(false);
+              }
+              toast.dismiss(t.id);
+            }}
+          >
+            Si
+          </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -48,7 +126,7 @@ function Profile() {
                 borderColor: "rgb(255, 135, 50)",
                 color: "white",
               }}
-              //onClick={}
+              onClick={() => setEditing(true)}
             >
               Editar
             </button>
