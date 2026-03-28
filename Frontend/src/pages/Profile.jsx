@@ -57,14 +57,13 @@ function Profile() {
   };
 
   const handleSave = async () => {
-    console.log("CLICK GUARDAR");
     try {
       setSaving(true);
       const cleanData = { ...form };
       if (!cleanData.password) {
         delete cleanData.password;
       }
-      const res = await api.put(`/user/${user.id}`, cleanData);
+      const res = await api.put(`/auth/user/${user.id}`, cleanData);
       const updatedUser = res.data;
       setForm(getFormFromUser(updatedUser));
       setUser(updatedUser);
@@ -92,7 +91,7 @@ function Profile() {
             onClick={async () => {
               try {
                 setLoadingDelete(true);
-                await api.delete(`/user/${user.id}`);
+                await api.delete(`/auth/user/${user.id}`);
                 toast.success("Cuenta eliminada");
                 localStorage.removeItem("token");
                 window.location.href = "/";
