@@ -6,16 +6,14 @@ import { useAuth } from "@context/AuthContext";
 
 import { toast } from "react-hot-toast";
 
+import api from "../services/api";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@styles/register_login.css";
 
 function Profile() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-
-  const [email, setEmail] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [direccion, setDireccion] = useState("");
 
   const [editing, setEditing] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -30,17 +28,11 @@ function Profile() {
       navigate("/login");
       return;
     }
-    if (user) {
-      setForm({
-        name: user.name || "",
-        email: user.email || "",
-        direction: user.direction || ""
-      });
-    }
-
-    setNombre(user.name || "");
-    setEmail(user.email || "");
-    setDireccion(user.address || "");
+    setForm({
+      name: user.name || "",
+      email: user.email || "",
+      direction: user.direction || ""
+    });
   }, [user, navigate]);
 
   const handleLogout = () => {
@@ -90,7 +82,7 @@ function Profile() {
                 window.location.href = "/";
               } catch (error) {
                 toast.error("Error al eliminar cuenta");
-              }finally{
+              } finally {
                 setLoadingDelete(false);
               }
               toast.dismiss(t.id);
@@ -146,38 +138,78 @@ function Profile() {
         </div>
 
         <div className="col-md-8">
-          <div className="m-3 form-floating">
-            <input
-              className="form-control"
-              type="text"
-              id="nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-            />
-            <label htmlFor="nombre">Nombre</label>
-          </div>
+          {editing ? (
+            <>
+              <div className="m-3 form-floating">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                />
+                <label>Nombre</label>
+              </div>
+              <div className="m-3 form-floating">
+                <input
+                  className="form-control"
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  disabled
+                />
+                <label>Email</label>
+              </div>
+              <div className="m-3 form-floating">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="direction"
+                  value={form.direction}
+                  onChange={handleChange}
+                />
+                <label>Direccion</label>
+              </div>
+              <div className="m-3 form-floating">
+                <input
+                  className="form-control"
+                  type="password"
+                  name="password"
+                  placeholder="Nueva contraseña"
+                  onChange={handleChange}
+                />
+                <label>Nueva contraseña</label>
+              </div>
+              <div className="d-flex gap-2 m-3">
+                <button className="btn btn-success" onClick={handleSave}>
+                  Guardar
+                </button>
+                <button className="btn btn-secondary" onClick={handleCancel}>
+                  Cancelar
+                </button>
 
-          <div className="m-3 form-floating">
-            <input
-              className="form-control"
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label htmlFor="email">Email</label>
-          </div>
-
-          <div className="m-3 form-floating">
-            <input
-              className="form-control"
-              type="text"
-              id="direccion"
-              value={direccion}
-              onChange={(e) => setDireccion(e.target.value)}
-            />
-            <label htmlFor="direccion">Dirección</label>
-          </div>
+                <button
+                  className="btn btn-danger ms-auto"
+                  onClick={handleDelete}
+                  disabled={loadingDelete}
+                >
+                  {loadingDelete ? "Eliminando..." : "Eliminar cuenta"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="m-3">
+                <p><strong>Nombre</strong> {form.name}</p>
+              </div>
+              <div className="m-3">
+                <p><strong>Email</strong> {form.email}</p>
+              </div>
+              <div className="m-3">
+                <p><strong>Direccion</strong> {form.direction}</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
